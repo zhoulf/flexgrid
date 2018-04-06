@@ -1,2 +1,0 @@
-# flexgrid
-virtual-scroller
