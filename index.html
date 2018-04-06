@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>szgrid</title>
+	<link rel="stylesheet" href="./dist/grid.min.css">
+	<style tyle="text/css">
+		.container {
+			width: 98%;
+		}
+		.red {
+			color: #f00;
+		}
+	</style>
+</head>
+<body>
+	<input id="match_value" type="text" placeholder="定位股东代码">
+	显示或隐藏列:<select name="columnToggle" id="columnToggle">
+		<option value="MRYC">买入异常</option> 
+		<option value="CGYC">持股异常</option> 
+		<option value="YYBMC">营业部名称</option>
+		<option value="JMMZ">净买卖值</option> 
+		<option value="XGBG">习惯变更</option> 
+		<option value="YYBMC">营业部名称</option>
+		<option value="YYBDQ">营业部地区</option>
+		<option value="GDDM">股东代码</option> 
+		<option value="GDMC">股东名称</option> 
+		<option value="DYGLD">地域关联度</option>
+		<option value="CJGS">成交股数</option> 
+		<option value="QJMRSL">期间买入数量</option>
+		<option value="MRJJ">买入均价</option> 
+		<option value="MCGS">卖出股数</option> 
+		<option value="MCJE">卖出金额</option> 
+		<option value="MCJJ">卖出均价</option> 
+		<option value="JMMGS">净买卖股数</option>
+		<option value="JMMJE">净买卖金额</option>
+		<option value="CJBL">成交笔数</option>
+	</select>
+
+	列锁定:<select name="columnLock" id="columnLock">
+		<option value="MRYC">买入异常</option> 
+		<option value="CGYC">持股异常</option> 
+		<option value="YYBMC">营业部名称</option>
+		<option value="JMMZ">净买卖值</option> 
+		<option value="XGBG">习惯变更</option> 
+		<option value="YYBMC">营业部名称</option>
+		<option value="YYBDQ">营业部地区</option>
+		<option value="GDDM">股东代码</option> 
+		<option value="GDMC">股东名称</option> 
+		<option value="DYGLD">地域关联度</option>
+		<option value="CJGS">成交股数</option> 
+		<option value="QJMRSL">期间买入数量</option>
+		<option value="MRJJ">买入均价</option> 
+		<option value="MCGS">卖出股数</option> 
+		<option value="MCJE">卖出金额</option> 
+		<option value="MCJJ">卖出均价</option> 
+		<option value="JMMGS">净买卖股数</option>
+		<option value="JMMJE">净买卖金额</option>
+		<option value="CJBL">成交笔数</option>
+	</select>
+	<div class="container"></div>
+	
+	<script src="lib/jquery/1.10.2/jquery.min.js"></script>
+	<script src="lib/lodash/4.17.5/lodash.min.js"></script>
+	<script src="data/data.js"></script>
+	<script src="dist/grid.es6.js"></script>
+
+	<script>
+
+		var data = createData(100000);
+
+		var g = new sz.grid({
+			'domEl': document.querySelector('.container'),
+			'width': '100%',
+			'height': 540,
+			'columns': columns,
+			'data': data
+		});
+
+		g.render();
+
+		$('#match_value').on('input', _.debounce(function(evt) {
+			var value = this.value, index;
+			g.store.forEach(function(row, i) {
+				if (row.GDDM.indexOf(value) !== -1) {
+					index = i;
+				}
+			});
+
+			g.scrollToTop(index * 38);
+		}, 500));
+
+		$('#columnToggle').on('change', function(evt) {
+			g.columnModel.getColumnByDataIndex(this.value).toggle();
+		});
+
+		$('#columnLock').on('change', function(evt) {
+			col = g.columnModel.getColumnByDataIndex(this.value);
+			col.locked ? col.unLock() : col.lock();
+		});
+		// setInterval(function() {
+		// 	g.store.setData(createData(1), true);
+		// }, 1000);
+	</script>
+</body>
+</html>
