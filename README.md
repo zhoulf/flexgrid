@@ -1,6 +1,12 @@
-![alt text](https://github.com/zhoulf/flexgrid/blob/master/data/website.PNG "Title")
 
-This is an [example link](https://zhoulf.github.io/flexgrid/).
+# FlexGrid.js
+
+**先上个基础的预览效果图**
+![alt text](https://github.com/zhoulf/flexgrid/blob/master/data/website.PNG "flexgrid")
+
+点击 [https://zhoulf.github.io/flexgrid/](https://zhoulf.github.io/flexgrid/ "flexgrid") 访问页面
+
+### 快速上手代码
 
 `<script>
 
@@ -41,5 +47,6 @@ This is an [example link](https://zhoulf.github.io/flexgrid/).
 	</script>
 `
 
+### API (待补充)
 
-	
+### 更新(待补充)
