@@ -1,4 +1,8 @@
-<script>
+![alt text](https://github.com/zhoulf/flexgrid/blob/master/data/website.PNG "Title")
+
+This is an [example link](https://zhoulf.github.io/flexgrid/).
+
+`<script>
 
 		var data = createData(100000);
 
@@ -35,3 +39,7 @@
 		// 	g.store.setData(createData(1), true);
 		// }, 1000);
 	</script>
+`
+
+
+	
