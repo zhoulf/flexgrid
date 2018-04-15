@@ -1,21 +1,26 @@
 var EventEmitter = require('../util/EventEmitter');
 var $ = require('../util/shim').$;
 
+var defineDell = function(colM) {
+	let cell = $('<li/>')
+		.addClass('c-grid-cell')
+		.addClass('c-align-' + colM.align)
+		.attr('tabindex', -1)
+		.width(colM.width);
+
+	if (colM.locked) {
+		cell.addClass('c-column-locked');
+	}
+
+	return cell;
+};
+
 var createCell = function($row, colsModel) {
 	var size = colsModel.size();
 	var children = new Map();
 
 	colsModel.each(colM => {
-
-		let cell = $('<li/>')
-			.addClass('c-grid-cell')
-			.addClass('c-align-' + colM.align)
-			.attr('tabindex', -1)
-			.width(colM.width);
-
-		if (colM.locked) {
-			cell.addClass('c-column-locked');
-		}
+		let cell = defineDell(colM);
 
 		$row.append(cell);
 		children.set(colM, cell);
@@ -34,6 +39,13 @@ class RowNode {
 	}
 
 	_bindEvent(colsModel) {
+		this.colsModel.on('column-add', colM => {
+			let cell = defineDell(colM);
+
+			this.$node.append(cell);
+			this.children.set(colM, cell);
+		});
+
 		colsModel.each(colM => {
 			colM.on('column-resized', width => {
 				console.log(width);
@@ -57,6 +69,12 @@ class RowNode {
 				} else {
 					colEle.removeClass('c-column-locked');
 				}
+			});
+
+			colM.on('destory', () => {
+				let colEle = this.children.get(colM);
+				this.children.delete(colM);			
+				colEle.remove();
 			});
 		});
 	}

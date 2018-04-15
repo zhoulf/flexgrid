@@ -78,6 +78,46 @@ var LockColManager = function(colsModel, header, $dom, bufferNode) {
 	}
 
 	function initEvent() {
+
+		const columnLockOrUnLock = (isLocked, colM) => {
+			let headerElement = header.colElements.get(colM);
+
+			if (isLocked) {
+				visibleLockColumn.add(colM);
+
+				colM.on('scroll-x', x => {
+					let leftStyle = { 'left': x + colM.awayFromLeft };
+
+					headerElement.css(leftStyle);
+					bufferNode.getNodeList().forEach(node => node.children.get(colM).css(leftStyle));
+				});
+
+			} else {
+				visibleLockColumn.remove(colM);
+
+				colM.off('scroll-x');
+
+			}
+
+			let currentLeft = $dom.viewport.scrollLeft() + colM.awayFromLeft;
+
+			// 设置并记录初始的左侧位
+			headerElement.css('left', currentLeft);
+			bufferNode.getNodeList().forEach(node => node.children.get(colM).css('left', currentLeft));
+
+			visibleLockColumn.publish(colM, $dom.viewport.scrollLeft());
+			updateBoxSize();
+		};
+
+		colsModel.on('column-add', colM => {
+			// BUGFIX TODO
+
+			// ...
+			colM.on('column-locked', isLocked => {
+				columnLockOrUnLock(isLocked, colM);
+			});
+		});
+
 		colsModel.getColumn().forEach(colM => {
 
 			colM.on('column-resized', width => {
@@ -99,33 +139,8 @@ var LockColManager = function(colsModel, header, $dom, bufferNode) {
 
 
 			colM.on('column-locked', isLocked => {
-				let headerElement = header.colElements.get(colM);
-
-				if (isLocked) {
-					visibleLockColumn.add(colM);
-
-					colM.on('scroll-x', x => {
-						let leftStyle = { 'left': x + colM.awayFromLeft };
-
-						headerElement.css(leftStyle);
-						bufferNode.getNodeList().forEach(node => node.children.get(colM).css(leftStyle));
-					});
-
-				} else {
-					visibleLockColumn.remove(colM);
-
-					colM.off('scroll-x');
-
-				}
-
-				let currentLeft = $dom.viewport.scrollLeft() + colM.awayFromLeft;
-
-				// 设置并记录初始的左侧位
-				headerElement.css('left', currentLeft);
-				bufferNode.getNodeList().forEach(node => node.children.get(colM).css('left', currentLeft));
-
-				visibleLockColumn.publish(colM, $dom.viewport.scrollLeft());
-				updateBoxSize();
+				// ...
+				columnLockOrUnLock(isLocked, colM);
 			});
 		});
 		

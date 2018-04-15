@@ -97,6 +97,12 @@ class Column extends EventEmitter {
 		this.fire('column-sort-changed', this.sortState);
 		this.context.fire('notice-colModel-sort-changed');
  	}
+
+ 	remove() {
+ 		this.fire('destory');
+ 		this.context.fire('column-removed', this);
+ 		this.removeEvent();
+ 	}
 }
 
 
@@ -112,22 +118,56 @@ class ColModel extends EventEmitter {
 		this.colModel = new Map(); // data by cid
 		this.colHeaders = new Map(); // data by dataIndex
 
+		this._initColumn(columns);
+		this._bindEvent();
+	}
+
+	_initColumn(columns, callback) {
+		let size = this.size();
+
 		columns.forEach((col, index) => {
-			let cid = index;
+			let cid = index + size;
 			let colM = new Column(cid, col, this);
 
 			this.colModel.set(cid, colM);
 			this.columns.push(colM);
 			this.colHeaders.set(col.dataIndex, colM);
-		});
 
-		this._bindEvent();
+			callback && callback(colM);
+		});
+	}
+
+	addColumns(columns) {
+		if (!Array.isArray(columns)) {
+			columns = [columns];
+		}
+		this._initColumn(columns, colM => this.fire('column-add', colM));
+	}
+
+	removeColumn(dataIndex) {
+		if (!Array.isArray(dataIndex)) {
+			dataIndex = [dataIndex];
+		}
+
+		dataIndex.forEach(ds => {
+			let colM = this.getColumnByDataIndex(ds);
+
+			if (colM) {
+				colM.remove();
+			}
+		});
 	}
 
 	_bindEvent() {
 		this.on('notice-colModel-sort-changed', _.debounce(() => {
 			this.fire('columns-sort-changed');
 		}, 20));
+
+		this.on('column-removed', colM => {
+			this.columns = this.columns.filter(col => col.dataIndex != colM.dataIndex);
+			this.colModel.delete(colM.cid);
+			this.colHeaders.delete(colM.dataIndex);
+		});
 	}
 
 	size() { 

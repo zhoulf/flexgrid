@@ -57,6 +57,16 @@ class Header {
 	_bindEvent() {
 		this._columnResize();
 
+		this.colsModel.on('column-add', colM => {
+			let colElement = createColumnElement(colM);
+
+			this.colElements.set(colM, colElement);
+			this.$row.append(colElement);
+
+			let rowW = this.$row.width();
+			this.$row.width(rowW + colM.width);
+		});
+
 		this.colsModel.each(colM => {
 
 			colM.on('column-resized', width => this.colElements.get(colM).outerWidth(width));
@@ -95,6 +105,15 @@ class Header {
 				} else {
 					colEle.removeClass(SORT_CLS_ASC).removeClass(SORT_CLS_DESC);
 				}
+			});
+
+			colM.on('destory', () => {
+				let colEle = this.colElements.get(colM);
+				this.colElements.delete(colM);			
+				colEle.remove();
+
+				let rowW = this.$row.width();
+				this.$row.width(rowW - colM.width);
 			});
 		});
 	}
