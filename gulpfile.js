@@ -37,7 +37,7 @@ gulp
 
 	.task('compile', () => {
 		return browserify({
-			entries: './src/core/GridView.js',
+			entries: './src/index.js',
 			standalone: 'sz.grid',
 			debug: true
 		})

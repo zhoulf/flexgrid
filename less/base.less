@@ -5,6 +5,7 @@
 @stripe-rows-color: #eaeaea;
 @row-hover-color: #e6f0fa;
 @header-cell-hover: #f1f1f1;
+@cell-selected: #aeeafb;
 
 body {
 	font-family: "microsoft yahei", "宋体", Arial;
@@ -37,6 +38,7 @@ ul.c-grid-row {
 		}*/
 	}
 }
+
 .c-cell {
 	box-sizing: border-box;
 	line-height: 21px;
@@ -47,12 +49,15 @@ ul.c-grid-row {
 	border-right: 1px solid @border-color;
 }
 
-
-li.c-grid-cell {
+ul.c-grid-row li.c-grid-cell {
 	display: inline-block;
 	border-bottom: 1px solid @border-color;
 	background-color: @background-color;
 	.c-cell;
+
+	&.c-cell-selected { 
+		background-color: @cell-selected;
+	}
 }
 
 .c-column-hide {

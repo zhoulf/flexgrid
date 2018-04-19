@@ -6,6 +6,7 @@ var defineDell = function(colM) {
 		.addClass('c-grid-cell')
 		.addClass('c-align-' + colM.align)
 		.attr('tabindex', -1)
+		.data('dataIndex', colM.dataIndex)
 		.width(colM.width);
 
 	if (colM.locked) {
@@ -86,6 +87,7 @@ class RowNode {
 		this.colsModel.each(colM => {
 
 			content = colM.renderer(row.data[colM.dataIndex]);
+			// TODO addClass(()=> row.cell[colM.dataIndex].selected)
 			cells.get(colM).html(content);
 
 		});
