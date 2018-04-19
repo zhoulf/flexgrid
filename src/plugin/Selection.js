@@ -23,11 +23,13 @@ class Selection extends GridView {
 
 		this.$dom.canvas
 			.on('mousedown', CELL_CLS, function(evt) {
-				self.$dom.canvas.find(CELL_CLS).removeClass(CELL_SELECTED_CLS);
-				self._moving = true;
-				let $cell = $(this).addClass(CELL_SELECTED_CLS);
-				self._start = [$cell.data('dataIndex'), +$cell.parent(ROW_CLS).attr('rid')];
-				// console.log(start);
+				if (evt.button === 0) {
+					self.$dom.canvas.find(CELL_CLS).removeClass(CELL_SELECTED_CLS);
+					self._moving = true;
+					let $cell = $(this).addClass(CELL_SELECTED_CLS);
+					self._start = [$cell.data('dataIndex'), +$cell.parent(ROW_CLS).attr('rid')];
+					// console.log(start);
+				}
 			})
 			.on('mouseenter', CELL_CLS, function(evt) {
 				if (self._moving) {
@@ -60,11 +62,11 @@ class Selection extends GridView {
 		let removeYRange = [];
 		// down
 		if (yDir >= 0 && y1 < lastY) {
-			removeYRange = [+y1, +lastY];
+			removeYRange = [y1, lastY];
 		}
 		// up
 		if (yDir <= 0 && y1 > lastY) {
-			removeYRange = [+lastY, +y1];
+			removeYRange = [lastY, y1];
 		}
 		
 		this.lastY = y1;
