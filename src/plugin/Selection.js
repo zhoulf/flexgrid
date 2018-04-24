@@ -22,7 +22,7 @@ class Selection extends GridView {
 		this._selectDataIndex = [];
 	}
 
-	_bindEvent($dom) {
+	_bindEvent() {
 		super._bindEvent();
 
 		let self = this;
