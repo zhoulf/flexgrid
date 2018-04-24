@@ -1,4 +1,5 @@
-var throttle = function(fn, time) {
+// TODO
+var debounce = function(fn, time) {
 	var timer = null;
 	return function(...args) {
 		if (timer) clearTimeout(timer);
@@ -8,6 +9,31 @@ var throttle = function(fn, time) {
 		}, time);
 	}
 }
+
+//解决requestAnimationFrame兼容问题
+var raFrame = window.requestAnimationFrame ||
+              window.webkitRequestAnimationFrame ||
+              window.mozRequestAnimationFrame ||
+              window.oRequestAnimationFrame ||
+              window.msRequestAnimationFrame ||
+              function(callback) {
+                  window.setTimeout(callback, 1000 / 60);
+              };
+
+//柯里化封装
+var throttle = function(fn) {
+    let isLocked;
+    return function(...args) {
+
+        if(isLocked) return 
+
+        isLocked = true;
+        raFrame(() => {
+            isLocked = false;
+            fn.apply(this, args)
+        });
+    }
+};
 
 class Scroller {
 	constructor(lineHeight, bufferZone) {
@@ -42,7 +68,7 @@ class Scroller {
 
 	onY(handler, delay) {
 		// TODO
-		// var dealyFn = throttle(handler, delay);
+		// var dealyFn = debounce(handler, delay);
 
 		this._triggerY = throttle((y) => {
 			this.yDir = y - this.yPreIndex;
