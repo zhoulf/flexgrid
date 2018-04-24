@@ -9,6 +9,10 @@ class Selection extends GridView {
 	constructor(options) {
 		super(options);
 
+		this._defaults();
+	}
+
+	_defaults() {
 		this._moving = false;
 		this._start = null;
 		this._end = null;
@@ -22,6 +26,10 @@ class Selection extends GridView {
 		super._bindEvent();
 
 		let self = this;
+
+		this.columnModel.on('notice-colModel-sort-changed', () => {
+			this._defaults();
+		});
 
 		this.$dom.canvas
 			.on('mousedown', CELL_CLS, function(evt) {
@@ -52,7 +60,7 @@ class Selection extends GridView {
 			});
 
 		this.bufferNode.on('row-update', (rowNode, row) => {
-			console.log(rowNode.$node, row.rid);
+			console.log(rowNode.$node, row.rid, this._selectY);
 			
 			let i = row.rid;
 			let [y0, y1] = this._selectY;

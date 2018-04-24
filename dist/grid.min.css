@@ -38,7 +38,7 @@ ul.c-grid-row:hover .c-grid-cell {
   overflow: hidden;
   border-right: 1px solid #c6c6c6;
 }
-li.c-grid-cell {
+ul.c-grid-row li.c-grid-cell {
   display: inline-block;
   border-bottom: 1px solid #c6c6c6;
   background-color: #fff;
@@ -50,7 +50,7 @@ li.c-grid-cell {
   overflow: hidden;
   border-right: 1px solid #c6c6c6;
 }
-li.c-grid-cell.c-cell-selected {
+ul.c-grid-row li.c-grid-cell.c-cell-selected {
   background-color: #aeeafb;
 }
 .c-column-hide {

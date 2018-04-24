@@ -110,8 +110,6 @@ class BufferNode extends EventEmitter {
 	}
 
 	init(limit, colsModel, total, cacheTimes) {
-		this.removeEvent();
-
 		this.limit = limit;
 		this.total = total;
 		this.cacheTimes = cacheTimes || 3;

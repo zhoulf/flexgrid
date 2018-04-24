@@ -63,7 +63,7 @@ class GridComponent extends EventEmitter {
 			.onY((dir, domain, start, end, index, total) => {
 				// console.log(`滚动方向：${dir}, 加载区间: [${domain}], 现有范围：(${start} - ${end}), `)
 				this._bufferRender(dir, domain);
-			}, 60);
+			}, 20);
 
 		this.$dom.viewport.height(viewportHeight);
 		this.$dom.viewport.on('scroll', (evt) => {
