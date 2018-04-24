@@ -70,7 +70,7 @@ class Scroller {
 		// TODO
 		// var dealyFn = debounce(handler, delay);
 
-		this._triggerY = throttle((y) => {
+		this._triggerY = debounce((y) => {
 			this.yDir = y - this.yPreIndex;
 			this.yPreIndex = y;
 

@@ -14,6 +14,8 @@ class Selection extends GridView {
 		this._end = null;
 		this._lastY = null;
 		this._selection = [];
+		this._selectY = [];
+		this._selectDataIndex = [];
 	}
 
 	_bindEvent($dom) {
@@ -44,16 +46,39 @@ class Selection extends GridView {
 			.on('mouseup', function(evt) {
 				self._moving = false;
 				// console.log(end);
-				// console.log(sec);
+				console.log(self._selection);
 				// TODO
 				// copy($('.cell.selected'));
 			});
+
+		this.bufferNode.on('row-update', (rowNode, row) => {
+			console.log(rowNode.$node, row.rid);
+			
+			let i = row.rid;
+			let [y0, y1] = this._selectY;
+			let cols = this._selectDataIndex;
+
+			if (i >= y0 && i < y1 + 1) {
+				cols.forEach((col) => {
+					rowNode.children.forEach(($cell, colM) => {
+						if (cols.indexOf(colM.dataIndex) != -1) {
+							$cell.addClass(CELL_SELECTED_CLS);
+						} else {
+							$cell.removeClass(CELL_SELECTED_CLS)
+						}
+					});
+				});
+			} else {
+				rowNode.$node.find(CELL_CLS).removeClass(CELL_SELECTED_CLS);
+			}
+
+		});
 	}
 
 	selectionRange([x0, y0], [x1, y1]) {
 
 		let yDir = y1 - y0;
-		let lastY = this.lastY;
+		let lastY = this._lastY;
 			
 		// yRange = { last: , now: [y0, y1] };
 		// [l0, l1]
@@ -69,15 +94,17 @@ class Selection extends GridView {
 			removeYRange = [lastY, y1];
 		}
 		
-		this.lastY = y1;
+		this._lastY = y1;
 		console.log(yDir, removeYRange);
 
 		let dataIndex = this.getLockAndVisiableColumnAsDataIndex();
 		[x0, y0, x1, y1] = orderBy(x0, y0, x1, y1, dataIndex);
 
 
-		let cols = dataIndex.slice(dataIndex.indexOf(x0), dataIndex.indexOf(x1)+1);
+		let cols = this._selectDataIndex = dataIndex.slice(dataIndex.indexOf(x0), dataIndex.indexOf(x1)+1);
 		console.log(cols);
+
+		this._selectY = [y0, y1 + 1];
 		let rows = this.store.slice(y0, y1 + 1);
 
 		this._selection = rows.map(row => {
@@ -115,6 +142,10 @@ class Selection extends GridView {
 		});
 	}
 
+	/*
+	 * lock + visiable = columns
+	 * @param {Array} columns -[dataIndex...]
+	 */
 	getLockAndVisiableColumnAsDataIndex() {
 		let cols = [];
 

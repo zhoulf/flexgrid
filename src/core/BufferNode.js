@@ -30,8 +30,10 @@ var createCell = function($row, colsModel) {
 	return children;
 };
 
-class RowNode {
-	constructor(colsModel) {
+class RowNode extends EventEmitter {
+	constructor(colsModel, context) {
+		super();
+		this.$vm = context;
 		this.colsModel = colsModel;
 		this.$node = $('<ul/>').addClass('c-grid-row');
 
@@ -81,6 +83,9 @@ class RowNode {
 	}
 
 	setData(row, offsetTop) {
+		// 这里如果用AOP方式实现更好TODO
+		this.$vm.fire('row-update-before', this, row);
+
 		var content;
 		var cells = this.children;
 
@@ -92,7 +97,9 @@ class RowNode {
 
 		});
 
-		return this.$node.css('top', offsetTop).attr('rid', row.rid);
+		this.$node.css('top', offsetTop).attr('rid', row.rid);
+
+		return this.$node;
 	}
 }
 
@@ -103,11 +110,16 @@ class BufferNode extends EventEmitter {
 	}
 
 	init(limit, colsModel, total, cacheTimes) {
+		this.removeEvent();
+
 		this.limit = limit;
 		this.total = total;
 		this.cacheTimes = cacheTimes || 3;
 		this.nodeList = [];
 		this.colsModel = colsModel;
+
+		// 这里暂为Selection实现，应该用AOP维护 TODO
+		this.on('row-update-before', (rowNode, row) => this.fire('row-update', rowNode, row));
 	}
 
 	getNodeList() {
@@ -157,7 +169,7 @@ class BufferNode extends EventEmitter {
 		var nodes = [];
 
 		for (var i = start; i <= end; i++) {
-			nodes.push(new RowNode(this.colsModel));
+			nodes.push(new RowNode(this.colsModel, this));
 		}
 
 		this.nodeList = dir > 0 ? this.nodeList.concat(nodes) : nodes.concat(this.nodeList);
