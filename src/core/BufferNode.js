@@ -117,7 +117,7 @@ class BufferNode extends EventEmitter {
 		this.colsModel = colsModel;
 
 		// 这里暂为Selection实现，应该用AOP维护 TODO
-		this.on('row-update-before', (rowNode, row) => this.fire('row-update', rowNode, row));
+		// this.on('row-update-before', (rowNode, row) => this.fire('row-update', rowNode, row));
 	}
 
 	getNodeList() {

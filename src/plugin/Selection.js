@@ -1,4 +1,5 @@
 var GridView = require('../core/GridView');
+var Contextmenu = require('./Contextmenu');
 
 const CELL_CLS = 'li.c-grid-cell';
 const CELL_SELECTED_CLS = 'c-cell-selected';
@@ -39,6 +40,9 @@ class Selection extends GridView {
 					let $cell = $(this).addClass(CELL_SELECTED_CLS);
 					self._start = [$cell.data('dataIndex'), +$cell.parent(ROW_CLS).attr('rid')];
 					// console.log(start);
+				} 
+				else if (evt.button === 2) {
+					
 				}
 			})
 			.on('mouseenter', CELL_CLS, function(evt) {
@@ -59,8 +63,10 @@ class Selection extends GridView {
 				// copy($('.cell.selected'));
 			});
 
-		this.bufferNode.on('row-update', (rowNode, row) => {
-			console.log(rowNode.$node, row.rid, this._selectY);
+		this.bufferNode.on('row-update-before', (rowNode, row) => {
+			// console.log(rowNode.$node, row.rid, this._selectY);
+
+			if (this._selection.length === 0) return false;
 			
 			let i = row.rid;
 			let [y0, y1] = this._selectY;
@@ -81,6 +87,8 @@ class Selection extends GridView {
 			}
 
 		});
+
+		Contextmenu({ text: '复制', callback(evt) { console.log(self._selection); } })
 	}
 
 	selectionRange([x0, y0], [x1, y1]) {
@@ -103,14 +111,14 @@ class Selection extends GridView {
 		}
 		
 		this._lastY = y1;
-		console.log(yDir, removeYRange);
+		// console.log(yDir, removeYRange);
 
 		let dataIndex = this.getLockAndVisiableColumnAsDataIndex();
 		[x0, y0, x1, y1] = orderBy(x0, y0, x1, y1, dataIndex);
 
 
 		let cols = this._selectDataIndex = dataIndex.slice(dataIndex.indexOf(x0), dataIndex.indexOf(x1)+1);
-		console.log(cols);
+		// console.log(cols);
 
 		this._selectY = [y0, y1 + 1];
 		let rows = this.store.slice(y0, y1 + 1);
