@@ -5,13 +5,11 @@ var defineDell = function(colM) {
 	let cell = $('<li/>')
 		.addClass('c-grid-cell')
 		.addClass('c-align-' + colM.align)
+		.addClass(() => colM.hidden ? 'c-column-hide' : '')
+		.addClass(() => colM.locked ? 'c-column-locked' : '')
 		.attr('tabindex', -1)
 		.data('dataIndex', colM.dataIndex)
 		.width(colM.width);
-
-	if (colM.locked) {
-		cell.addClass('c-column-locked');
-	}
 
 	return cell;
 };

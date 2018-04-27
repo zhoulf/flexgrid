@@ -11,6 +11,8 @@ class Selection extends GridView {
 		super(options);
 
 		this._defaults();
+
+		this._initContextmenu();
 	}
 
 	_defaults() {
@@ -21,6 +23,76 @@ class Selection extends GridView {
 		this._selection = [];
 		this._selectY = [];
 		this._selectDataIndex = [];
+	}
+
+	_initContextmenu() {
+		let self = this;
+		// 列头
+		Contextmenu({
+			container: this.$dom.wrapper, 
+			targetClass: '.c-header-cell',
+			trigger: function(evt) {
+				// TODO
+				this.data = $(evt.target).data('column');
+				return true;
+			}, 
+			menuList: [{ 
+				text: 'lock', 
+				callback: function(evt) {
+					console.log(this.data);
+					this.data.lock();
+				} 
+			}, { 
+				text: 'unlock', 
+				callback: function(evt) { 
+					this.data.unLock();
+				} 
+			}, { 
+				text: 'show', 
+				callback: function(evt) { 
+					this.data.show();
+				} 
+			}, { 
+				text: 'hide', 
+				callback: function(evt) { 
+					this.data.hide();
+				} 
+			}, { 
+				text: 'locator', 
+				callback: function(evt) { 
+					// TODO
+					self.scrollToTop(Math.random() * 30000);
+				} 
+			}, { 
+				text: 'count', 
+				callback(evt) { 
+					alert(self.store.size());
+				} 
+			}]
+		});
+
+		// 单元格
+		Contextmenu({
+			container: this.$dom.body, 
+			targetClass: '.'+CELL_SELECTED_CLS,
+			trigger(evt) {
+				// TODO
+				return evt.currentTarget.className.indexOf(CELL_SELECTED_CLS) != -1;
+			}, 
+			menuList: [{ 
+				text: 'copy', 
+				callback(evt) { console.log(self._selection); } 
+			},{ 
+				text: 'print', 
+				callback(evt) { console.log(self._selection); } 
+			},{ 
+				text: 'export', 
+				callback(evt) { console.log(self._selection); } 
+			},{ 
+				text: 'mark', 
+				callback(evt) { console.log(self._selection); } 
+			}]
+		});
 	}
 
 	_bindEvent() {
@@ -38,7 +110,7 @@ class Selection extends GridView {
 					self.$dom.canvas.find(CELL_CLS).removeClass(CELL_SELECTED_CLS);
 					self._moving = true;
 					let $cell = $(this).addClass(CELL_SELECTED_CLS);
-					self._start = [$cell.data('dataIndex'), +$cell.parent(ROW_CLS).attr('rid')];
+					self._start = self._end = [$cell.data('dataIndex'), +$cell.parent(ROW_CLS).attr('rid')];
 					// console.log(start);
 				} 
 				else if (evt.button === 2) {
@@ -87,8 +159,7 @@ class Selection extends GridView {
 			}
 
 		});
-
-		Contextmenu({ text: '复制', callback(evt) { console.log(self._selection); } })
+		
 	}
 
 	selectionRange([x0, y0], [x1, y1]) {
@@ -127,10 +198,10 @@ class Selection extends GridView {
 			return cols.map(col => row.data[col]);
 		});
 
-		// TODO
-		// 格式化,状态写入到store
-		// console.log(this._selection);
+		this._rePaintNode(yDir, y0, y1, removeYRange, cols);
+	}
 
+	_rePaintNode(yDir, y0, y1, removeYRange, cols) {
 		let nodeList = this.bufferNode.getNodeList();
 		nodeList.forEach((rowNode) => {
 			let $row = rowNode.$node;

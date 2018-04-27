@@ -1,31 +1,31 @@
 var $ = require('../util/shim').$;
 
-function createItem(item) {
-	let $item = $('<li class="menu-item"></li>');
-    let $button = $('<button type="button" class="menu-btn"></button>')
-    	.on('click', item.callback);
+function createItem(item, vm) {
+	let $item = $('<li class="c-menu-item"></li>');
+    let $button = $('<button type="button" class="c-menu-btn"></button>')
+    	.on('click', item.callback.bind(vm));
 
     if (item.iconCls) {
     	$button.append('<i class="fa fa-share"></i>');
     }
     
-    $button.append(`<span class="menu-text">${item.text}</span>`);
+    $button.append(`<span class="c-menu-text">${item.text}</span>`);
 
     return $item.append($button);
 };
 
-function compileMenu(menus) {
+function compileMenu(menus, vm) {
 	if (menus && menus.length === 0) return null;
 	
-	let $menus = $('<menu class="menu"></menu>');
-	let $menuSeparator = $('<li class="menu-separator"></li>');
+	let $menus = $('<menu class="c-menu"></menu>');
+	let $menuSeparator = $('<li class="c-menu-separator"></li>');
 	
 	menus.forEach(menu => {
-		let $menu = createItem(menu);
+		let $menu = createItem(menu, vm);
 		let children;
 
 		if (menu.children) {
-			children = compileMenu(menu.children);
+			children = compileMenu(menu.children, vm);
 
 			if (children) {
 				$menu.addClass('submenu').append(children);
@@ -41,14 +41,18 @@ function compileMenu(menus) {
 /**
  * @params {Object[]} menuList -- [{text: 'menuName', callback(evt) {} }, ...] 
  */
-module.exports = function(menuList) {
+module.exports = function({ container, targetClass, trigger, menuList }) {
 	if (!Array.isArray(menuList)) {
 		menuList = [menuList];
 	}
 
-	let menu = compileMenu(menuList)[0];
+	var $vm = {
+		data: null
+	};
 
-	$(document.body).append(menu);
+	let menu = compileMenu(menuList, $vm)[0];
+
+	$(container).append(menu).on('contextmenu', targetClass, onContextMenu);
 
 	function showMenu(x, y){
 	    menu.style.left = x + 'px';
@@ -59,14 +63,21 @@ module.exports = function(menuList) {
 	    menu.classList.remove('show-menu');
 	}
 	function onContextMenu(e){
-	    e.preventDefault();
-	    showMenu(e.pageX, e.pageY);
-	    document.addEventListener('mouseup', onMouseDown, true);
+		console.log(e.target.className);
+		if (trigger.call($vm, e)) {
+		    e.preventDefault();
+		    showMenu(e.clientX - 5, e.clientY - 35);
+		    document.addEventListener('mouseup', onMouseDown, true);
+		}
 	}
 	function onMouseDown(e){
 	    hideMenu();
-	    document.removeEventListener('mousedup', onMouseDown);
+	    document.removeEventListener('mouseup', onMouseDown);
 	}
 
-	document.addEventListener('contextmenu', onContextMenu, false);
+	return {
+
+	}
+
+	// document.addEventListener('contextmenu', onContextMenu, true);
 };
