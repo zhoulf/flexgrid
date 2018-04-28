@@ -1,5 +1,4 @@
 var GridView = require('../core/GridView');
-var Contextmenu = require('./Contextmenu');
 
 const CELL_CLS = 'li.c-grid-cell';
 const CELL_SELECTED_CLS = 'c-cell-selected';
@@ -11,8 +10,6 @@ class Selection extends GridView {
 		super(options);
 
 		this._defaults();
-
-		this._initContextmenu();
 	}
 
 	_defaults() {
@@ -24,77 +21,7 @@ class Selection extends GridView {
 		this._selectY = [];
 		this._selectDataIndex = [];
 	}
-
-	_initContextmenu() {
-		let self = this;
-		// 列头
-		Contextmenu({
-			container: this.$dom.wrapper, 
-			targetClass: '.c-header-cell',
-			trigger: function(evt) {
-				// TODO
-				this.data = $(evt.target).data('column');
-				return true;
-			}, 
-			menuList: [{ 
-				text: 'lock', 
-				callback: function(evt) {
-					console.log(this.data);
-					this.data.lock();
-				} 
-			}, { 
-				text: 'unlock', 
-				callback: function(evt) { 
-					this.data.unLock();
-				} 
-			}, { 
-				text: 'show', 
-				callback: function(evt) { 
-					this.data.show();
-				} 
-			}, { 
-				text: 'hide', 
-				callback: function(evt) { 
-					this.data.hide();
-				} 
-			}, { 
-				text: 'locator', 
-				callback: function(evt) { 
-					// TODO
-					self.scrollToTop(Math.random() * 30000);
-				} 
-			}, { 
-				text: 'count', 
-				callback(evt) { 
-					alert(self.store.size());
-				} 
-			}]
-		});
-
-		// 单元格
-		Contextmenu({
-			container: this.$dom.body, 
-			targetClass: '.'+CELL_SELECTED_CLS,
-			trigger(evt) {
-				// TODO
-				return evt.currentTarget.className.indexOf(CELL_SELECTED_CLS) != -1;
-			}, 
-			menuList: [{ 
-				text: 'copy', 
-				callback(evt) { console.log(self._selection); } 
-			},{ 
-				text: 'print', 
-				callback(evt) { console.log(self._selection); } 
-			},{ 
-				text: 'export', 
-				callback(evt) { console.log(self._selection); } 
-			},{ 
-				text: 'mark', 
-				callback(evt) { console.log(self._selection); } 
-			}]
-		});
-	}
-
+	
 	_bindEvent() {
 		super._bindEvent();
 
@@ -246,6 +173,12 @@ class Selection extends GridView {
 			.filter(dataIndex => cols.indexOf(dataIndex) == -1);
 
 		return cols.concat(visiableCols);
+	}
+
+	destory() {
+		super.destory();
+
+		this._defaults();
 	}
 
 }

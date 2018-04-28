@@ -14,50 +14,56 @@
 	</style>
 </head>
 <body>
-	<input id="match_value" type="text" placeholder="定位股东代码">
-	显示或隐藏列:<select name="columnToggle" id="columnToggle">
-		<option value="MRYC">买入异常</option> 
-		<option value="CGYC">持股异常</option> 
-		<option value="YYBMC">营业部名称</option>
-		<option value="JMMZ">净买卖值</option> 
-		<option value="XGBG">习惯变更</option> 
-		<option value="YYBMC">营业部名称</option>
-		<option value="YYBDQ">营业部地区</option>
-		<option value="GDDM">股东代码</option> 
-		<option value="GDMC">股东名称</option> 
-		<option value="DYGLD">地域关联度</option>
-		<option value="CJGS">成交股数</option> 
-		<option value="QJMRSL">期间买入数量</option>
-		<option value="MRJJ">买入均价</option> 
-		<option value="MCGS">卖出股数</option> 
-		<option value="MCJE">卖出金额</option> 
-		<option value="MCJJ">卖出均价</option> 
-		<option value="JMMGS">净买卖股数</option>
-		<option value="JMMJE">净买卖金额</option>
-		<option value="CJBL">成交笔数</option>
-	</select>
+	<div class="operate">
+		<input id="match_value" type="text" placeholder="定位股东代码">
+		显示或隐藏列:<select name="columnToggle" id="columnToggle">
+			<option value="MRYC">买入异常</option> 
+			<option value="CGYC">持股异常</option> 
+			<option value="YYBMC">营业部名称</option>
+			<option value="JMMZ">净买卖值</option> 
+			<option value="XGBG">习惯变更</option> 
+			<option value="YYBMC">营业部名称</option>
+			<option value="YYBDQ">营业部地区</option>
+			<option value="GDDM">股东代码</option> 
+			<option value="GDMC">股东名称</option> 
+			<option value="DYGLD">地域关联度</option>
+			<option value="CJGS">成交股数</option> 
+			<option value="QJMRSL">期间买入数量</option>
+			<option value="MRJJ">买入均价</option> 
+			<option value="MCGS">卖出股数</option> 
+			<option value="MCJE">卖出金额</option> 
+			<option value="MCJJ">卖出均价</option> 
+			<option value="JMMGS">净买卖股数</option>
+			<option value="JMMJE">净买卖金额</option>
+			<option value="CJBL">成交笔数</option>
+		</select>
 
-	列锁定:<select name="columnLock" id="columnLock">
-		<option value="MRYC">买入异常</option> 
-		<option value="CGYC">持股异常</option> 
-		<option value="YYBMC">营业部名称</option>
-		<option value="JMMZ">净买卖值</option> 
-		<option value="XGBG">习惯变更</option> 
-		<option value="YYBMC">营业部名称</option>
-		<option value="YYBDQ">营业部地区</option>
-		<option value="GDDM">股东代码</option> 
-		<option value="GDMC">股东名称</option> 
-		<option value="DYGLD">地域关联度</option>
-		<option value="CJGS">成交股数</option> 
-		<option value="QJMRSL">期间买入数量</option>
-		<option value="MRJJ">买入均价</option> 
-		<option value="MCGS">卖出股数</option> 
-		<option value="MCJE">卖出金额</option> 
-		<option value="MCJJ">卖出均价</option> 
-		<option value="JMMGS">净买卖股数</option>
-		<option value="JMMJE">净买卖金额</option>
-		<option value="CJBL">成交笔数</option>
-	</select>
+		列锁定:<select name="columnLock" id="columnLock">
+			<option value="MRYC">买入异常</option> 
+			<option value="CGYC">持股异常</option> 
+			<option value="YYBMC">营业部名称</option>
+			<option value="JMMZ">净买卖值</option> 
+			<option value="XGBG">习惯变更</option> 
+			<option value="YYBMC">营业部名称</option>
+			<option value="YYBDQ">营业部地区</option>
+			<option value="GDDM">股东代码</option> 
+			<option value="GDMC">股东名称</option> 
+			<option value="DYGLD">地域关联度</option>
+			<option value="CJGS">成交股数</option> 
+			<option value="QJMRSL">期间买入数量</option>
+			<option value="MRJJ">买入均价</option> 
+			<option value="MCGS">卖出股数</option> 
+			<option value="MCJE">卖出金额</option> 
+			<option value="MCJJ">卖出均价</option> 
+			<option value="JMMGS">净买卖股数</option>
+			<option value="JMMJE">净买卖金额</option>
+			<option value="CJBL">成交笔数</option>
+		</select>
+
+		<p>
+			提示：试试列头、单元格、选中单元格、行的右键菜单
+		</p>
+	</div>
 	<div class="container"></div>
 	
 	<script src="lib/jquery/1.10.2/jquery.min.js"></script>
@@ -101,6 +107,19 @@
 		// setInterval(function() {
 		// 	g.store.setData(createData(1), true);
 		// }, 1000);
+
+		var autoH = function() {
+			var h = document.documentElement.clientHeight - $('.operate').height() - 45;
+			g.setHeight(h);
+		};
+
+		$(function() {
+			autoH();
+		});
+		
+		$(window).on('resize', function() {
+			autoH();		
+		});
 	</script>
 </body>
 </html>
