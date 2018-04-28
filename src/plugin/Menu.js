@@ -66,7 +66,7 @@ module.exports = function({ container, targetClass, trigger, menuList }) {
 		console.log(e.target.className);
 		if (trigger.call($vm, e)) {
 		    e.preventDefault();
-		    showMenu(e.clientX - 5, e.clientY - 35);
+		    showMenu(e.clientX - 5, e.clientY - container.offset().top);
 		    document.addEventListener('mouseup', onMouseDown, true);
 		}
 	}
