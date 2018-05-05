@@ -19,11 +19,11 @@ var createColumnElement = function(colM) {
 
 
 class Header {
-	constructor($header, colsModel, store) {
+	constructor($header, colsModel) {
 
 		this.$header = $header;
 		this.colsModel = colsModel;
-		this.store = store;
+		// this.store = store;
 		this.colElements = new Map();
 
 		this._createColumnElements();

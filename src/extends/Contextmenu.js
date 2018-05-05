@@ -1,6 +1,14 @@
 var Selection = require('./Selection');
 var Menu = require('../plugin/Menu');
 
+/**
+ * 在JS的世界，没有真正的class类，只有拷贝和基于原型两种，（注：在 ES2015/ES6 中引入了class关键字，但只是语法糖，JavaScript 仍然是基于原型的）
+ * 在原型链上查找属性比较耗时，对性能有副作用，这在性能要求苛刻的情况下很重要。另外，试图访问不存在的属性时会遍历整个原型链。遍历对象的属性时，原型链上的每个可枚举属性都会被枚举出来。要检查对象是否具有自己定义的属性，而不是其原型链上的某个属性，则必须使用所有对象从Object.prototype继承的 hasOwnProperty 方法
+ * ref(https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Inheritance_and_the_prototype_chain)
+ * 拷贝方式有基于call和apply的构造函数上下文修改、也可以直接克隆对象
+ * 下面演示基于原型的继承，记住prototype是
+ */
+
 class Contextmenu extends Selection {
 	constructor(options) {
 		super(options);
@@ -20,6 +28,13 @@ class Contextmenu extends Selection {
 			trigger: function(evt) {
 				// TODO
 				this.data = $(evt.target).data('column');
+
+				if (this.data.vtype === 'number') {
+					this.set('sum-id', 'hidden');
+				} else {
+					this.set('sum-id', 'visiable');
+				}
+				
 				return true;
 			}, 
 			menuList: [{ 
@@ -34,6 +49,8 @@ class Contextmenu extends Selection {
 					this.data.unLock();
 				} 
 			}, { 
+				separator: true 
+			}, { 
 				text: 'show', 
 				callback: function(evt) { 
 					this.data.show();
@@ -45,6 +62,7 @@ class Contextmenu extends Selection {
 				} 
 			}, { 
 				text: 'locator', 
+				disabled: true,
 				callback: function(evt) { 
 					// TODO
 					self.scrollToTop(Math.random() * 30000);
@@ -53,6 +71,12 @@ class Contextmenu extends Selection {
 				text: 'count', 
 				callback(evt) { 
 					alert(self.store.size());
+				} 
+			}, { 
+				id: 'sum-id',
+				text: 'sum', 
+				callback(evt) { 
+					
 				} 
 			}, { 
 				text: 'select column', 

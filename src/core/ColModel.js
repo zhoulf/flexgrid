@@ -28,6 +28,7 @@ class Column extends EventEmitter {
 			'lockable': true,
 			'menuDisabled': true,
 
+			// private
 			'sortState': null
 		};
 
@@ -126,6 +127,7 @@ class ColModel extends EventEmitter {
 		let size = this.size();
 
 		columns.forEach((col, index) => {
+			// cid解决没有dataIndex列或相同dataIndex列的问题
 			let cid = index + size;
 			let colM = new Column(cid, col, this);
 

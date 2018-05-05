@@ -46,7 +46,7 @@ class GridComponent extends EventEmitter {
 	}
 
 	_init() {
-		this.header = new Header(this.$dom.header, this.columnModel, this.store);
+		this.header = new Header(this.$dom.header, this.columnModel);
 		var total = this.store.size();
 		var rowHeight = this.rowHeight = calcRowHeight();
 		var viewportHeight = this.height - this.$dom.header.outerHeight();

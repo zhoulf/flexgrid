@@ -74,7 +74,7 @@
 
 	<script>
 
-		var data = createData(2020);
+		var data = createData(0);
 
 		var g = new sz.grid({
 			'domEl': document.querySelector('.container'),
@@ -105,9 +105,9 @@
 			col = g.columnModel.getColumnByDataIndex(this.value);
 			col.locked ? col.unLock() : col.lock();
 		});
-		// setInterval(function() {
-		// 	g.store.setData(createData(1), true);
-		// }, 1000);
+		setInterval(function() {
+			g.store.setData(createData(1), true);
+		}, 1000);
 
 		var autoH = function() {
 			var h = document.documentElement.clientHeight - $('.operate').height() - 45;
