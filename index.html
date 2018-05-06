@@ -74,14 +74,15 @@
 
 	<script>
 
-		var data = createData(0);
+		var data = createData(56);
 
 		var g = new sz.grid({
 			'domEl': document.querySelector('.container'),
 			'width': '100%',
 			'height': 540,
 			'columns': columns,
-			'data': data
+			'data': data,
+			'bizContextMenu': bizContextMenu
 		});
 
 		g.render();
@@ -105,9 +106,9 @@
 			col = g.columnModel.getColumnByDataIndex(this.value);
 			col.locked ? col.unLock() : col.lock();
 		});
-		setInterval(function() {
-			g.store.setData(createData(1), true);
-		}, 1000);
+		// setInterval(function() {
+		// 	g.store.setData(createData(1), true);
+		// }, 1000);
 
 		var autoH = function() {
 			var h = document.documentElement.clientHeight - $('.operate').height() - 45;

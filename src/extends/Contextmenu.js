@@ -1,158 +1,207 @@
 var Selection = require('./Selection');
 var Menu = require('../plugin/Menu');
+var $  = require('../util/shim').$;
 
-/**
- * 在JS的世界，没有真正的class类，只有拷贝和基于原型两种，（注：在 ES2015/ES6 中引入了class关键字，但只是语法糖，JavaScript 仍然是基于原型的）
- * 在原型链上查找属性比较耗时，对性能有副作用，这在性能要求苛刻的情况下很重要。另外，试图访问不存在的属性时会遍历整个原型链。遍历对象的属性时，原型链上的每个可枚举属性都会被枚举出来。要检查对象是否具有自己定义的属性，而不是其原型链上的某个属性，则必须使用所有对象从Object.prototype继承的 hasOwnProperty 方法
- * ref(https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Inheritance_and_the_prototype_chain)
- * 拷贝方式有基于call和apply的构造函数上下文修改、也可以直接克隆对象
- * 下面演示基于原型的继承，记住prototype是
- */
+const defHeaderContextMenu = [{ 
+		text: 'lock', 
+		handler: function(info, context, evt) {
+			info.column.lock();
+		} 
+	}, { 
+		text: 'unlock', 
+		handler: function(info, context, evt) { 
+			info.column.unLock();
+		} 
+	}, { 
+		separator: true 
+	}, { 
+		text: 'show', 
+		handler: function(info, context, evt) { 
+			info.column.show();
+		} 
+	}, { 
+		text: 'hide', 
+		handler: function(info, context, evt) { 
+			info.column.hide();
+		} 
+	}, { 
+		text: 'locator', 
+		disabled: true,
+		handler: function(info, context, evt) { 
+			// TODO
+			context.scrollToTop(Math.random() * 30000);
+		} 
+	}, { 
+		text: 'select column', 
+		handler(info, context, evt) { 
+			// alert(self.store.size());
+			context._start = [info.column.dataIndex, 0];
+			context._end = [info.column.dataIndex, context.store.size() - 1];
+
+			context.selectionRange(context._start, context._end);
+		} 
+	}, { 
+		cls: 'number-column',
+		text: 'count', 
+		handler(info, context, evt) { 
+			alert(context.store.size());
+		} 
+	}, { 
+		cls: 'number-column',
+		text: 'count', 
+		handler(info, context, evt) {
+			alert(context.store.size());
+		} 
+	}];
+
+const defCellContextMenu = [{
+		text: 'lock row to top', 
+		handler(info, context, evt) { console.log(context._selection); } 
+	},{ 
+		text: 'lock row to bottom', 
+		handler(info, context, evt) { console.log(context._selection); } 
+	},{ 
+		text: 'search', 
+		handler(info, context, evt) { console.log(context._selection); } 
+	},{ 
+		text: 'mark', 
+		handler(info, context, evt) { console.log(context._selection); } 
+	}];	
+
+const defSelectionContextMenu = [{ 
+		text: 'copy', 
+		handler(info, context, evt) { console.log(info, context._selection); } 
+	},{ 
+		text: 'print', 
+		handler(info, context, evt) { 
+			console.log(evt, data, context);
+		} 
+	},{ 
+		text: 'export', 
+		handler(info, context, evt) { console.log(context._selection); } 
+	},{ 
+		text: 'mark', 
+		handler(info, context, evt) { console.log(context._selection); } 
+	}];
+
 
 class Contextmenu extends Selection {
 	constructor(options) {
 		super(options);
 
-		this._headerMenu = this._initHeaderMenu();
-		this._cellMenu = this._initCellMenu();
-		this._selectionMenu = this._initSelectionMenu();
-		this._rowMenu = this._initRowMenu();
+		this.cellCtxMenu = options.bizContextMenu.cell;
+
+		this.headerCtxMenu = {
+			before: function(info, evt) {
+				if (info.column.vtype === 'number') {
+					this.getCls('.number-column').show();
+				} else {
+					this.getCls('.number-column').hide();
+				}
+
+				return true;
+			}
+		};
 	}
 
-	_initHeaderMenu() {
+	_bindEvent() {
+		super._bindEvent();
+
 		let self = this;
 
-		return Menu({
-			container: this.$dom.wrapper, 
-			targetClass: '.c-header-cell',
-			trigger: function(evt) {
-				// TODO
-				this.data = $(evt.target).data('column');
-
-				if (this.data.vtype === 'number') {
-					this.set('sum-id', 'hidden');
-				} else {
-					this.set('sum-id', 'visiable');
-				}
-				
-				return true;
-			}, 
-			menuList: [{ 
-				text: 'lock', 
-				callback: function(evt) {
-					console.log(this.data);
-					this.data.lock();
-				} 
-			}, { 
-				text: 'unlock', 
-				callback: function(evt) { 
-					this.data.unLock();
-				} 
-			}, { 
-				separator: true 
-			}, { 
-				text: 'show', 
-				callback: function(evt) { 
-					this.data.show();
-				} 
-			}, { 
-				text: 'hide', 
-				callback: function(evt) { 
-					this.data.hide();
-				} 
-			}, { 
-				text: 'locator', 
-				disabled: true,
-				callback: function(evt) { 
-					// TODO
-					self.scrollToTop(Math.random() * 30000);
-				} 
-			}, { 
-				text: 'count', 
-				callback(evt) { 
-					alert(self.store.size());
-				} 
-			}, { 
-				id: 'sum-id',
-				text: 'sum', 
-				callback(evt) { 
-					
-				} 
-			}, { 
-				text: 'select column', 
-				callback(evt) { 
-					// alert(self.store.size());
-					self._start = [this.data.dataIndex, 0];
-					self._end = [this.data.dataIndex, self.store.size() - 1];
-
-					self.selectionRange(self._start, self._end);
-				} 
-			}]
+		this.$contextmenuHeader = new Menu(this.$dom.wrapper, { 
+			data: defHeaderContextMenu, 
+			context: this 
 		});
 
-	}
-
-	_initCellMenu() {
-		let self = this;	
-
-		return Menu({
-			container: this.$dom.body, 
-			targetClass: '.c-grid-cell',
-			trigger(evt) {
-				// TODO
-				return evt.currentTarget.className.indexOf('c-grid-cell') != -1;
-			}, 
-			menuList: [{ 
-				text: 'lock row to top', 
-				callback(evt) { console.log(self._selection); } 
-			},{ 
-				text: 'lock row to bottom', 
-				callback(evt) { console.log(self._selection); } 
-			},{ 
-				text: 'search', 
-				callback(evt) { console.log(self._selection); } 
-			},{ 
-				text: 'mark', 
-				callback(evt) { console.log(self._selection); } 
-			}]
+		this.$contextmenu = new Menu(this.$dom.body, { 
+			data: [], 
+			context: this 
 		});
+		
+		this.$dom.wrapper
+			.on('contextmenu', '.c-header-cell', 
+				this._headerContextMenu.bind(this)
+			);
+
+		this.$dom.body
+			.on('contextmenu', '.c-grid-cell', 
+				this._cellContextMenu.bind(this, defCellContextMenu)
+			)
+			.on('contextmenu', '.c-cell-selected', 
+				this._cellContextMenu.bind(this, defSelectionContextMenu)
+			);
 	}
 
-	_initSelectionMenu() {
-		let self = this;	
+	_headerContextMenu(evt) {
+		let colM = $(evt.target).data('column');
+		let menu = this.$contextmenuHeader;
 
-		return Menu({
-			container: this.$dom.body, 
-			targetClass: '.c-cell-selected',
-			trigger(evt) {
-				// TODO
-				return evt.currentTarget.className.indexOf('c-cell-selected') != -1;
-			}, 
-			menuList: [{ 
-				text: 'copy', 
-				callback(evt) { console.log(self._selection); } 
-			},{ 
-				text: 'print', 
-				callback(evt) { console.log(self._selection); } 
-			},{ 
-				text: 'export', 
-				callback(evt) { console.log(self._selection); } 
-			},{ 
-				text: 'mark', 
-				callback(evt) { console.log(self._selection); } 
-			}]
-		});
+		let info = { 
+			'dataIndex': colM.dataIndex, 
+			'column': colM,
+			'context': menu
+		}
+
+		this.fire('header-contextmenu', info, evt);
+		// console.log(info);
+
+		if (this.headerCtxMenu.before.call(menu, info, evt)) {
+			
+			evt.preventDefault();
+
+			menu.setInfo(info);
+			menu.showAt(evt);
+		
+			docEvent(menu);
+		}
 	}
 
-	_initRowMenu() {
-		// TODO
+	_cellContextMenu(defCtxMenu, evt) {
+		let $cell = $(evt.target);
+		let dataIndex = $cell.data('dataIndex');
+		let rownumber = +$cell.parent('.c-grid-row').attr('rid');
+		let menu = this.$contextmenu;
+
+		let info = { 
+			'value': $cell.text(),
+			'dataIndex': dataIndex, 
+			'rownumber': rownumber,
+			'context': menu
+		};
+
+		this.fire('cell-contextmenu', info, evt);
+		// console.log(info);
+
+		if (this.cellCtxMenu.before.call(menu, info, evt)) {
+
+			evt.preventDefault();
+
+			menu.setInfo(info);
+			menu.update(defCtxMenu.concat(menu.getData()));
+			
+			menu.showAt(evt);
+		
+			docEvent(menu);
+		}
 	}
 
 	destory() {
 		super.destory();
 
-		// TODO
+		this.$contextmenuHeader.destory();
+		this.$contextmenu.destory();
+		this.cellCtxMenu = null;
 	}
+}
+
+function docEvent($contextmenu) {
+	$(document).on('mouseup.contextmenu', onMouseDown.bind(null, $contextmenu));
+}
+
+function onMouseDown($contextmenu){
+    $contextmenu.hide();
+    $(document).off('mouseup.contextmenu');
 }
 
 module.exports = Contextmenu;

@@ -56,3 +56,26 @@ var columns = [
 	{text:'净买卖金额',   dataIndex: "JMMJE", width: 128, align: 'right' },
 	{text:'成交笔数',   dataIndex: "CJBL", width: 88, align: 'right' }
 ];
+
+var CJGS = [
+	{text: 'open-link-1', handler: function() { console.log('1-3'); }}, 
+	{text: 'open-link-2', handler: function() {}, disabled: true }, 
+	{separator: true },
+	{text: 'open-link-3', handler: function(value, colM) { } }
+];
+var XGBG = [
+	{text: 'open-link-4', handler: function() { console.log('4-6'); } }, 
+	{text: 'open-link-5', handler: function() {} }, 
+	{text: 'open-link-6', handler: function(value, colM) { } }
+];
+
+var colModel = { CJGS: CJGS, XGBG: XGBG };
+var bizContextMenu = {
+	cell: {
+    	menus: CJGS.concat(XGBG),
+    	before: function(info, context, evt) { 
+    		this.update(colModel[info.dataIndex]);
+    		return true; 
+    	}
+    }
+};

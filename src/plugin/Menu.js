@@ -1,31 +1,112 @@
 var $ = require('../util/shim').$;
+var Utils = require('../util/Utils');
+
+
+class Menu {
+	constructor($wrapper, { data, context }) {
+		this.params = {};
+		this.$menu = $(null);
+		this.$wrapper = $wrapper;
+		this._data = data || [];
+		this.context = context;
+
+		this.update(data);
+	}
+
+	update(data) {
+		this.$menu.remove(); // TODO 优化复用节点
+		
+		if (Array.isArray(data) && data.length > 0) {
+			this.$menu = compileMenu(data, this);
+
+			this.$wrapper.append(this.$menu);
+
+			this._data = data;
+		} else {
+			this._data = [];
+		}
+	}
+
+	setInfo(info) {
+		this.$info = info;
+	}
+
+	getInfo() {
+		return this.$info;
+	}
+
+	getData() {
+		return this._data;
+	}
+
+	getCls(className) {
+		return this.$menu.find(className);
+	}
+
+	showAt(evt) {
+		if (!this._data.length) {
+			return;
+		}
+
+		let x = evt.clientX - this.$wrapper.offset().left;
+		let y = evt.clientY - this.$wrapper.offset().top;
+
+	    this.$menu
+	    	.addClass('show-menu')
+	    	.css({ 'left': x + 'px', 'top': y + 'px' });
+	}
+
+	hide() {
+		this.$menu.removeClass('show-menu');
+	}
+
+	getDom() {
+		return this.$menu;
+	}
+
+	destory() {
+		this.$menu.empty();
+	}
+
+}
+
 
 const emptyFn = (evt) => { 
 	evt.preventDefault;
 	return false; 
 };
 
+function convert(item) {
+	let defItem = {
+		'id': 'cm-id-' + Date.now(),
+		'text': '',
+		'iconCls': '',
+		'hidden': false,
+		'disabled': false,
+		'handler': function() {}
+	};
+
+	return Object.assign(defItem, item);
+}
+
 function createItem(item, vm) {
-	let disabled = item.disabled ? 'disabled': '';
-	let $item = $('<li/>').addClass('c-menu-item').addClass(disabled);
+	let $item = $('<li/>')
+			.attr('id', item.id)
+			.addClass('c-menu-item')
+			.addClass(item.disabled ? 'disabled': '');
+
     let $button = $('<button/>').addClass('c-menu-btn')
-    		.on('click', disabled ? emptyFn : item.callback.bind(vm, vm.data));
-
-    if (item.iconCls) {
-    	$button.append('<i class="fa fa-share"></i>');
-    }
-
-    if (item.id) {
-    	$item.attr('id', item.id);
-    }
-    
-    $button.append(`<span class="c-menu-text">${item.text}</span>`);
+    		.append(`<i class="fa ${item.iconCls}"></i>`)
+    		.append(`<span class="c-menu-text">${item.text}</span>`)
+    		.on('click', (evt) => {
+    			item.handler.call(vm, vm.getInfo(), vm.context, evt);
+    		});
 
     return $item.append($button);
 };
 
 function compileMenu(menus, vm) {
-	if (menus && menus.length === 0) return null;
+	if (menus && menus.length === 0) return $(null);
 	
 	let $menus = $('<menu/>').addClass('c-menu');
 	let $menuSeparator = $('<li/>').addClass('c-menu-separator');
@@ -35,7 +116,7 @@ function compileMenu(menus, vm) {
 			return $menus.append($menuSeparator);
 		}
 
-		let $menu = createItem(menu, vm);
+		let $menu = createItem(convert(menu), vm);
 		let children;
 
 		if (menu.children) {
@@ -52,77 +133,5 @@ function compileMenu(menus, vm) {
 	return $menus;
 }
 
-/**
- * @params {Object[]} menuList -- [{text: 'menuName', callback(evt) {} }, ...] 
- */
-module.exports = function({ container, targetClass, trigger, menuList }) {
-	if (!Array.isArray(menuList)) {
-		menuList = [menuList];
-	}
 
-	var $vm = {
-		data: null
-	};
-
-	let $menu = compileMenu(menuList, $vm);
-
-	$(container).append($menu).on('contextmenu', targetClass, onContextMenu);
-
-	function showMenu(x, y){
-	    $menu.css({ 'left': x + 'px', 'top': y + 'px'}).addClass('show-menu');
-	}
-
-	function hideMenu(){
-	    $menu.removeClass('show-menu');
-	}
-
-	function onContextMenu(e){
-		console.log(e.target.className);
-		if (trigger.call($vm, e)) {
-		    e.preventDefault();
-		    showMenu(e.clientX - 5, e.clientY - container.offset().top);
-		    document.addEventListener('mouseup', onMouseDown, true);
-		}
-	}
-
-	function onMouseDown(e){
-	    hideMenu();
-	    document.removeEventListener('mouseup', onMouseDown);
-	}
-
-	let statusManager = (status) => {
-		let statusMap = {
-			visiable($obj) { $obj.show(); },
-			hidden($obj) { $obj.hide(); },
-			disabled($obj) { $obj.addClass('disabled'); },
-			abled($obj) { $obj.removeClass('disabled'); }
-		};
-
-		return statusMap[status] || emptyFn;
-	};
-
-	function setAttrs(attrs) {
-		$.each(attrs, (key, value) => {
-			statusManager(value)($menu.find(`#${key}`));
-		});
-	}
-
-	$vm.set = function(menuId, status) {
-		let attrs = {};
-		if (typeof menuId === 'string') {
-			attrs[menuId] = status;
-		} else if ($.isPlainObject(menuId)) {
-			attrs = menuId;
-		} else {
-			throw 'menuId is not match attrs';
-		}
-		
-		setAttrs(attrs);
-
-		return $vm;
-	};
-
-	return $vm;
-
-	// document.addEventListener('contextmenu', onContextMenu, true);
-};
+module.exports = Menu;
