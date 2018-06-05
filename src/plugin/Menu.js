@@ -27,6 +27,15 @@ class Menu {
 		}
 	}
 
+	merge(data) {
+		this._data = this._data.filter(item => {
+			return !data.includes(item);
+		});
+
+		this._data = data.concat(this._data);
+		this.update(this._data);
+	}
+
 	setInfo(info) {
 		this.$info = info;
 	}

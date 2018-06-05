@@ -1,4 +1,4 @@
-const $ = require('../util/shim').$;
+const { $, _ } = require('../util/shim');
 const DD = require('../util/DD');
 
 const SORT_CLS_ASC = 'c-column-asc';
@@ -93,7 +93,7 @@ class Header {
 			colM.on('column-sort-changed', sortState => {
 				let colEle = this.colElements.get(colM);
 
-				console.log(sortState);
+				// console.log(sortState);
 				if (sortState) {
 					if (sortState === 'ASC') {
 						colEle.addClass(SORT_CLS_ASC);
@@ -131,33 +131,35 @@ class Header {
 
 		var startX = 0;
 
-		DD(this.$row.find('li.c-header-cell'), {
+		DD(this.$row, {
+			'trigger': 'li.c-header-cell',
 			'restricter': function(evt) {
 				var offsetX = evt.offsetX;
-				if (evt.target.offsestWidth - offsetX <= 5) {
-					return $(evt.target);
+				console.log(this.offsetWidth, offsetX, this.innerText);
+				if (this.offsetWidth - offsetX <= 5) {
+					return $(this);
 				} else if (offsetX <= 5) {
-					return $(evt.target).prev();
+					return $(this).prev();
 				}
 			},
-			'onDragStart': function(offset, $target) {
+			'onDragStart': _.debounce(function(offset, $target) {
 				var scrollLeft = document.body.scrollLeft || document.documentElement.scrollLeft;
-				console.log($target.offset().left, $target.text());
+				// console.log($target.offset().left, $target.text());
 				startX = $target.offset().left - scrollLeft;
 				// console.log(offset.x, $target.text());
 
 				// startX = offset.x;
-			},
+			}, 80),
 			'onDragging': function(offset, $target) {
 
 			},
-			'onDragEnd': function(offset, $target) {
+			'onDragEnd': _.debounce(function(offset, $target) {
 				var width = offset.x - startX;
-				console.log(`${$target.text()}
-					原宽度为${$target.data('column').width},
-					改变为：${width}, [${offset.x} - ${startX}]`);
+				// console.log(`${$target.text()}
+				// 	原宽度为${$target.data('column').width},
+				// 	改变为：${width}, [${offset.x} - ${startX}]`);
 				$target.data('column').setWidth(width);
-			}
+			}, 80)
 		});
 	}
 

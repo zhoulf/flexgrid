@@ -63,7 +63,7 @@ class GridStore extends EventEmitter {
 			let { keys, dirs } = this._sortState;
 			let iterateFn = row => row.data[keys[0]];
 
-			console.log(keys, dirs);
+			// console.log(keys, dirs);
 
 			this.rows = _.orderBy(this.rows, iterateFn, dirs);
 			this.setData(_.map(this.rows, 'data'));

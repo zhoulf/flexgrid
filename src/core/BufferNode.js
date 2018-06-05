@@ -49,7 +49,7 @@ class RowNode extends EventEmitter {
 
 		colsModel.each(colM => {
 			colM.on('column-resized', width => {
-				console.log(width);
+				// console.log(width);
 				this.children.get(colM).outerWidth(width);
 			});
 

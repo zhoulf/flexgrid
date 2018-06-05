@@ -55,7 +55,7 @@ var dragDrop = function(evt ,opts) {
 };
 
 
-module.exports = function(target, options) {
+module.exports = function(delegate, options) {
 	var defaults = {
 		restricter(evt) { return null; },
 		onDragStart(offset, target) {},
@@ -65,12 +65,12 @@ module.exports = function(target, options) {
 
 	Object.assign(defaults, options);
 
-	$(target).on('mousedown', function(evt) {
-		var restricter = defaults.restricter(evt);
+	$(delegate).on('mousedown', options.trigger, function(evt) {
+		var restricter = defaults.restricter.call(this, evt);
 
 		if (restricter) {
-			defaults.$element = defaults.restricter(evt) || $(evt.target);
-			dragDrop(evt, defaults);
+			defaults.$element = restricter;
+			dragDrop.call(this, evt, defaults);
 		}
 	});
 };
