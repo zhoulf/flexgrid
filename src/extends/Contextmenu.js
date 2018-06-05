@@ -3,36 +3,36 @@ var Menu = require('../plugin/Menu');
 var $  = require('../util/shim').$;
 
 const defHeaderContextMenu = [{ 
-		text: 'lock', 
+		text: '冻结', 
 		handler: function(info, context, evt) {
 			info.column.lock();
 		} 
 	}, { 
-		text: 'unlock', 
+		text: '解冻', 
 		handler: function(info, context, evt) { 
 			info.column.unLock();
 		} 
 	}, { 
 		separator: true 
 	}, { 
-		text: 'show', 
+		text: '显示', 
 		handler: function(info, context, evt) { 
 			info.column.show();
 		} 
 	}, { 
-		text: 'hide', 
+		text: '隐藏', 
 		handler: function(info, context, evt) { 
 			info.column.hide();
 		} 
 	}, { 
-		text: 'locator', 
+		text: '定位', 
 		disabled: true,
 		handler: function(info, context, evt) { 
 			// TODO
 			context.scrollToTop(Math.random() * 30000);
 		} 
 	}, { 
-		text: 'select column', 
+		text: '选中整列', 
 		handler(info, context, evt) { 
 			// alert(self.store.size());
 			context._start = [info.column.dataIndex, 0];
@@ -42,13 +42,31 @@ const defHeaderContextMenu = [{
 		} 
 	}, { 
 		cls: 'number-column',
-		text: 'count', 
+		text: '统计总数', 
 		handler(info, context, evt) { 
 			alert(context.store.size());
 		} 
 	}, { 
 		cls: 'number-column',
-		text: 'count', 
+		text: '求和', 
+		handler(info, context, evt) {
+			alert(context.store.size());
+		} 
+	}, { 
+		cls: 'number-column',
+		text: '最大值', 
+		handler(info, context, evt) {
+			alert(context.store.size());
+		} 
+	}, { 
+		cls: 'number-column',
+		text: '最小值', 
+		handler(info, context, evt) {
+			alert(context.store.size());
+		} 
+	}, { 
+		cls: 'number-column',
+		text: '方差', 
 		handler(info, context, evt) {
 			alert(context.store.size());
 		} 
@@ -69,18 +87,18 @@ const defCellContextMenu = [{
 	}];	
 
 const defSelectionContextMenu = [{ 
-		text: 'copy', 
+		text: '复制', 
 		handler(info, context, evt) { console.log(info, context._selection); } 
 	},{ 
-		text: 'print', 
+		text: '打印', 
 		handler(info, context, evt) { 
 			console.log(evt, data, context);
 		} 
 	},{ 
-		text: 'export', 
+		text: '导出', 
 		handler(info, context, evt) { console.log(context._selection); } 
 	},{ 
-		text: 'mark', 
+		text: '标记', 
 		handler(info, context, evt) { console.log(context._selection); } 
 	}];
 
