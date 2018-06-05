@@ -47,6 +47,11 @@ class RowNode extends EventEmitter {
 			this.children.set(colM, cell);
 		});
 
+		this.colsModel.on('column-moved', (colM, index) => {
+			let cell = this.children.get(colM);
+			cell.after(this.$node.find('li.c-grid-cell').eq(index));
+		});
+
 		colsModel.each(colM => {
 			colM.on('column-resized', width => {
 				// console.log(width);

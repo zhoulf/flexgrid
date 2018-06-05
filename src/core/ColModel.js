@@ -99,6 +99,12 @@ class Column extends EventEmitter {
 		this.context.fire('notice-colModel-sort-changed');
  	}
 
+ 	moveTo(index) {
+ 		if (isNaN(+index)) return;
+
+ 		this.context.fire('column-move-to', this, +index + 1);
+ 	}
+
  	remove() {
  		this.fire('destory');
  		this.context.fire('column-removed', this);
@@ -165,11 +171,23 @@ class ColModel extends EventEmitter {
 			this.fire('columns-sort-changed');
 		}, 20));
 
+		this.on('column-move-to', (colM, index) => {
+			let current = this.columns.indexOf(colM);
+			this.columns.splice(index, 0, this.columns.splice(current, 1)[0]);
+			// this.columns.splice(index, 0, this.columns[current]);
+			// this.columns.splice(index > current ? current : current + 1, 1);
+
+			this.columns.forEach(colM => console.log(colM.dataIndex));
+
+			this.fire('column-moved', colM, index);
+		});
+
 		this.on('column-removed', colM => {
 			this.columns = this.columns.filter(col => col.dataIndex != colM.dataIndex);
 			this.colModel.delete(colM.cid);
 			this.colHeaders.delete(colM.dataIndex);
 		});
+
 	}
 
 	size() { 

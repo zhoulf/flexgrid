@@ -67,6 +67,11 @@ class Header {
 			this.$row.width(rowW + colM.width);
 		});
 
+		this.colsModel.on('column-moved', (colM, index) => {
+			let colElement = this.colElements.get(colM);
+			colElement.after(this.$row.find('li.c-header-cell').eq(index));
+		});
+
 		this.colsModel.each(colM => {
 
 			colM.on('column-resized', width => this.colElements.get(colM).outerWidth(width));
