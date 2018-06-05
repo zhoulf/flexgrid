@@ -50,3 +50,7 @@
 ### API (待补充)
 
 ### 更新(待补充)
+
+### 参考
+
+[强大的在线表格编辑器](http://demos.componentone.com/ASPNET/MVCExplorer/FlexGrid/Globalization?culture=zh-HK "flexgrid")
