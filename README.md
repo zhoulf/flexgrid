@@ -65,6 +65,46 @@
 	</tr>
 </table>
 
+#### 主要方法
+<table>
+	<tr>
+		<td>名称</td>
+		<td>说明</td>
+	</tr>
+	<tr>
+		<td>render()</td>
+		<td>渲染函数</td>
+	</tr>
+	<tr>
+		<td>destory()</td>
+		<td>销毁函数</td>
+	</tr>
+	<tr>
+		<td>setWidth()</td>
+		<td>设置宽度</td>
+	</tr>
+	<tr>
+		<td>setHeight()</td>
+		<td>设置高度</td>
+	</tr>
+	<tr>
+		<td>scrollToTop()</td>
+		<td>滚动到顶部</td>
+	</tr>
+</table>
+
+#### 主要事件
+<table>
+	<tr>
+		<td>名称</td>
+		<td>说明</td>
+	</tr>
+	<tr>
+		<td>...</td>
+		<td>...</td>
+	</tr>
+</table>
+
 ### 更新(待补充)
 
 ### 参考
