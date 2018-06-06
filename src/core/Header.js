@@ -21,6 +21,9 @@ var createColumnElement = function(colM) {
 class Header {
 	constructor($header, colsModel) {
 
+		this._dragging = false;
+		this._resizing = false;
+
 		this.$header = $header;
 		this.colsModel = colsModel;
 		// this.store = store;
@@ -56,6 +59,7 @@ class Header {
 
 	_bindEvent() {
 		this._columnResize();
+		this._columnMove();
 
 		this.colsModel.on('column-add', colM => {
 			let colElement = createColumnElement(colM);
@@ -133,13 +137,15 @@ class Header {
 			}
 		});
 
-
-		var startX = 0;
+		let startX = 0;
+		let self = this;
 
 		DD(this.$row, {
 			'trigger': 'li.c-header-cell',
 			'restricter': function(evt) {
-				var offsetX = evt.offsetX;
+				if (self._dragging) return false;
+
+				let offsetX = evt.offsetX;
 				
 				if (this.offsetWidth - offsetX <= 5) {
 					return $(this);
@@ -148,25 +154,92 @@ class Header {
 				}
 			},
 			'onDragStart': _.debounce(function(offset, $target) {
-				var scrollLeft = document.body.scrollLeft || document.documentElement.scrollLeft;
+				let scrollLeft = document.body.scrollLeft || document.documentElement.scrollLeft;
 				// console.log($target.offset().left, $target.text());
 				startX = $target.offset().left - scrollLeft;
 				// console.log(offset.x, $target.text());
-
+				self._resizing = true;
 				// startX = offset.x;
 			}, 80),
 			'onDragging': function(offset, $target) {
 
 			},
 			'onDragEnd': _.debounce(function(offset, $target) {
-				var width = offset.x - startX;
+				let width = offset.x - startX;
 				// console.log(`${$target.text()}
 				// 	原宽度为${$target.data('column').width},
 				// 	改变为：${width}, [${offset.x} - ${startX}]`);
 				$target.data('column').setWidth(width);
+				self._resizing = false;
 			}, 80)
 		});
 		
+	}
+
+	_columnMove() {
+		let self = this;
+		let toColumn = null;
+		let fromColumn = null;
+		let $body = $('body');
+		let $moveStatusTop = $('<div/>').addClass('c-col-placeholder c-top');
+		let $moveStatusBottom = $('<div/>').addClass('c-col-placeholder c-bottom');
+
+		this.$row
+			.on('mousedown', 'li.c-header-cell', function(evt) {
+				let offsetX = evt.offsetX;
+				
+				if (this.offsetWidth - offsetX <= 5 || offsetX <= 5) {
+					return false;
+				}
+
+				self._dragging = true;
+
+				let colEle = $(this).addClass('c-col-draggable');
+				fromColumn = $(this).data('column');
+				$body.append($moveStatusTop).append($moveStatusBottom);
+
+				evt.stopPropagation();
+				evt.preventDefault;
+
+				return false;
+			})
+			.on('mouseenter', 'li.c-header-cell', function(evt) {
+				if (self._dragging) {
+					let $overColumn = $(this);
+					toColumn = $overColumn.data('column');
+					
+					let top = $overColumn.offset().top - 12;
+					let left = $overColumn.offset().left + toColumn.width - 8;
+					
+					$moveStatusTop.css({ top: top, left: left }).show();
+					$moveStatusBottom.css({ top: top + 40, left: left }).show();
+
+					evt.stopPropagation();
+					evt.preventDefault;
+
+					return false;
+				}
+			})
+			.on('mouseup', function(evt) {
+				self._dragging = false;
+
+				if (toColumn) {
+					let index = self.colElements.get(toColumn).index();
+
+					let cindex = self.colsModel.getColumn().indexOf(toColumn);
+
+					console.log(index, cindex);
+
+					fromColumn.moveTo(index);
+					self.colElements.get(fromColumn).removeClass('c-col-draggable');
+
+					$moveStatusTop.hide().remove();
+					$moveStatusBottom.hide().remove();
+				}
+
+				fromColumn = null;
+				toColumn = null;
+			});
 	}
 
 	render() {

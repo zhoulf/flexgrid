@@ -204,6 +204,25 @@ li.c-grid-cell.c-cell-selected {
 .c-header-row .c-col-resizable {
   cursor: col-resize;
 }
+.c-header-row .c-col-draggable {
+  cursor: move;
+}
+.c-col-placeholder {
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  display: none;
+  border: 8px solid #0000;
+}
+.c-top {
+  border-top: 12px solid #32792d;
+}
+.c-bottom {
+  border-bottom: 12px solid #32792d;
+}
 .c-grid-body {
   background-color: #fff;
   border-style: solid;
