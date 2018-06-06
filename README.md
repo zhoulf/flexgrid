@@ -49,6 +49,22 @@
 
 ### API (待补充)
 
+#### 主要属性
+<table>
+	<tr>
+		<td>名称</td>
+		<td>说明</td>
+	</tr>
+	<tr>
+		<td>columnModel</td>
+		<td>列模型对象</td>
+	</tr>
+	<tr>
+		<td>store</td>
+		<td>数据仓库</td>
+	</tr>
+</table>
+
 ### 更新(待补充)
 
 ### 参考
