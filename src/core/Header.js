@@ -69,7 +69,7 @@ class Header {
 
 		this.colsModel.on('column-moved', (colM, index) => {
 			let colElement = this.colElements.get(colM);
-			colElement.after(this.$row.find('li.c-header-cell').eq(index));
+			colElement.insertAfter(this.$row.find('li.c-header-cell').eq(index));
 		});
 
 		this.colsModel.each(colM => {
@@ -140,7 +140,7 @@ class Header {
 			'trigger': 'li.c-header-cell',
 			'restricter': function(evt) {
 				var offsetX = evt.offsetX;
-				console.log(this.offsetWidth, offsetX, this.innerText);
+				
 				if (this.offsetWidth - offsetX <= 5) {
 					return $(this);
 				} else if (offsetX <= 5) {

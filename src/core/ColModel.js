@@ -102,7 +102,7 @@ class Column extends EventEmitter {
  	moveTo(index) {
  		if (isNaN(+index)) return;
 
- 		this.context.fire('column-move-to', this, +index + 1);
+ 		this.context.fire('column-move-to', this, +index);
  	}
 
  	remove() {
@@ -173,11 +173,16 @@ class ColModel extends EventEmitter {
 
 		this.on('column-move-to', (colM, index) => {
 			let current = this.columns.indexOf(colM);
-			this.columns.splice(index, 0, this.columns.splice(current, 1)[0]);
-			// this.columns.splice(index, 0, this.columns[current]);
-			// this.columns.splice(index > current ? current : current + 1, 1);
 
-			this.columns.forEach(colM => console.log(colM.dataIndex));
+			if (index === current) return;
+
+			if (index > current) {
+				this.columns.splice(++index, 0, this.columns[current]);
+				this.columns.splice(current, 1);
+			} else {
+				this.columns.splice(index, 0, this.columns[current]);
+				this.columns.splice(++current, 1);
+			}
 
 			this.fire('column-moved', colM, index);
 		});

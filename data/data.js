@@ -35,7 +35,7 @@ if (this.module && this.module.exports) {
 	exports.createData = createData;
 }
 var columns = [
-	{text:'买入异常', 	  dataIndex: "MRYC", width: 98, align: 'center', locked: true },
+	{text:'买入异常', 	  dataIndex: "MRYC", width: 98, align: 'center' },
 	{text:'持股异常', 	  dataIndex: "CGYC", width: 98, align: 'center' },
 	// {text:'营业部名称',   dataIndex: "YYBMC", width: 98 },
 	{text:'净买卖值', 	  dataIndex: "JMMZ", width: 88, align: 'right', vtype: 'number', renderer(v) { return '<a class="red">'+v+'</a>';} },
@@ -43,10 +43,10 @@ var columns = [
 	{text:'<a>操作</a>',   					width: 88, renderer() { return '<a href="javascript:void(0)">详情</a>'} },
 	{text:'营业部名称',   dataIndex: "YYBMC", width: 120 },
 	{text:'营业部地区',   dataIndex: "YYBDQ", width: 88 },
-	{text:'股东代码', 	  dataIndex: "GDDM", width: 108, locked: true, align: 'center'  },
+	{text:'股东代码', 	  dataIndex: "GDDM", width: 108, align: 'center'  },
 	{text:'股东名称', 	  dataIndex: "GDMC", width: 88, align: 'right' },
 	{text:'地域关联度',   dataIndex: "DYGLD", width: 126 },
-	{text:'成交股数', 	  dataIndex: "CJGS", width: 88, locked: true, vtype: 'number', align: 'right'  },
+	{text:'成交股数', 	  dataIndex: "CJGS", width: 88, vtype: 'number', align: 'right'  },
 	{text:'期间买入数量', dataIndex: "QJMRSL", width: 128, align: 'right' },
 	{text:'买入均价', 	  dataIndex: "MRJJ", width: 128, align: 'right' },
 	{text:'卖出股数', 	  dataIndex: "MCGS", width: 118, align: 'right' },

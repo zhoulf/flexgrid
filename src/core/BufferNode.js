@@ -49,7 +49,7 @@ class RowNode extends EventEmitter {
 
 		this.colsModel.on('column-moved', (colM, index) => {
 			let cell = this.children.get(colM);
-			cell.after(this.$node.find('li.c-grid-cell').eq(index));
+			cell.insertAfter(this.$node.find('li.c-grid-cell').eq(index));
 		});
 
 		colsModel.each(colM => {
