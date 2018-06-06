@@ -3,7 +3,7 @@ const $ = require('../util/shim').$;
 
 const FLEXMINWIDTH = 35;
 
-var dragDrop = function(evt ,opts) {
+var dragDrop = function(evt, opts) {
 	var doc = $(document);
 	var scrollLeft = document.body.scrollLeft || document.documentElement.scrollLeft;
 	var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;

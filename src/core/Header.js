@@ -161,6 +161,7 @@ class Header {
 				$target.data('column').setWidth(width);
 			}, 80)
 		});
+		
 	}
 
 	render() {
