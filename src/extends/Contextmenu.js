@@ -88,7 +88,10 @@ const defCellContextMenu = [{
 
 const defSelectionContextMenu = [{ 
 		text: '复制', 
-		handler(info, context, evt) { console.log(info, context._selection); } 
+		handler(info, context, evt) { 
+			console.log(info, context._selection); 
+			context.copySelection(info);
+		} 
 	},{ 
 		text: '打印', 
 		handler(info, context, evt) { 
@@ -185,6 +188,7 @@ class Contextmenu extends Selection {
 			'value': $cell.text(),
 			'dataIndex': dataIndex, 
 			'rownumber': rownumber,
+			'rowIndex': rownumber,
 			'context': menu
 		};
 

@@ -17,9 +17,59 @@ class Selection extends GridView {
 		this._start = null;
 		this._end = null;
 		this._lastY = null;
+
 		this._selection = [];
 		this._selectY = [];
 		this._selectDataIndex = [];
+	}
+
+	getSelection() {
+		return this._selection;
+	}
+
+	/**
+	 * 复制选框内容
+	 * @param {Object} info -{dataIndex, rowIndex}
+	 */
+	copySelection(info) {
+		if (!this.isInRange(info)) {
+			return false;
+		}
+
+		let values = this._copyContent();
+
+		let ta = $('<textarea>').val(values).appendTo(this.$dom.header).focus();
+		ta.get(0).setSelectionRange(0, values.length);
+		document.execCommand('copy', true);
+		ta.remove();
+	}
+
+	isInRange(info) {
+		return this._selectDataIndex.indexOf(info.dataIndex) !== -1
+			&& info.rowIndex >= this._selectY[0]
+			&& info.rowIndex <= this._selectY[1]
+	}
+
+	_copyContent() {
+		let cols = this._selectDataIndex.map(dataIndex => {
+			let col = this.columnModel.getColumnByDataIndex(dataIndex);
+
+			if (!col) { throw 'not find "dataIndex" in columns' };
+
+			return col;
+		});
+
+		let values = cols.map(col => pickText(col.text)).join('\t');
+
+		this._selection.forEach(row => {
+			values += '\r\n';
+
+			row.forEach((value, i) => {
+				values += pickText(cols[i].renderer(value, { rowIndex: 0}, { data: row })) + '\t';
+			});
+		});
+
+		return values;
 	}
 	
 	_bindEvent() {
@@ -202,6 +252,15 @@ function orderBy(x0, y0, x1, y1, dataIndex) {
 	}
 
 	return [x0, y0, x1, y1];
+}
+
+function pickText(fragment) {
+	var htmlString = new RegExp('\<.+?\>', 'g');
+	if (htmlString.test(fragment)) {
+		return fragment.replace(htmlString, '');
+	}
+
+	return fragment;
 }
 
 module.exports = Selection;
