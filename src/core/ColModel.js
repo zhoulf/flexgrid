@@ -171,20 +171,20 @@ class ColModel extends EventEmitter {
 			this.fire('columns-sort-changed');
 		}, 20));
 
-		this.on('column-move-to', (colM, index) => {
+		this.on('column-move-to', (colM, toIndex) => {
 			let current = this.columns.indexOf(colM);
 
-			if (index === current) return;
+			if (toIndex === current) return;
 
-			if (index > current) {
-				this.columns.splice(++index, 0, this.columns[current]);
+			if (toIndex > current) {
+				this.columns.splice(toIndex + 1, 0, this.columns[current]);
 				this.columns.splice(current, 1);
 			} else {
-				this.columns.splice(index, 0, this.columns[current]);
+				this.columns.splice(toIndex, 0, this.columns[current]);
 				this.columns.splice(++current, 1);
 			}
 
-			this.fire('column-moved', colM, index);
+			this.fire('column-moved', colM, current, toIndex);
 		});
 
 		this.on('column-removed', colM => {

@@ -31,6 +31,11 @@ class Selection extends GridView {
 			this._defaults();
 		});
 
+		this.columnModel.on('column-moved', () => {
+			this._defaults();
+			this.$dom.canvas.find(CELL_CLS).removeClass(CELL_SELECTED_CLS);
+		});
+
 		this.$dom.canvas
 			.on('mousedown', CELL_CLS, function(evt) {
 				if (evt.button === 0) {
@@ -77,7 +82,7 @@ class Selection extends GridView {
 						if (cols.indexOf(colM.dataIndex) != -1) {
 							$cell.addClass(CELL_SELECTED_CLS);
 						} else {
-							$cell.removeClass(CELL_SELECTED_CLS)
+							$cell.removeClass(CELL_SELECTED_CLS);
 						}
 					});
 				});

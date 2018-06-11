@@ -71,9 +71,9 @@ class Header {
 			this.$row.width(rowW + colM.width);
 		});
 
-		this.colsModel.on('column-moved', (colM, index) => {
+		this.colsModel.on('column-moved', (colM, formIndex, toIndex) => {
 			let colElement = this.colElements.get(colM);
-			colElement.insertAfter(this.$row.find('li.c-header-cell').eq(index));
+			colElement.insertAfter(this.$row.find('li.c-header-cell').eq(toIndex));
 		});
 
 		this.colsModel.each(colM => {
@@ -207,6 +207,8 @@ class Header {
 				if (self._dragging) {
 					let $overColumn = $(this);
 					toColumn = $overColumn.data('column');
+
+					console.log($overColumn.index());
 					
 					let top = $overColumn.offset().top - 12;
 					let left = $overColumn.offset().left + toColumn.width - 8;
@@ -227,8 +229,6 @@ class Header {
 					let index = self.colElements.get(toColumn).index();
 
 					let cindex = self.colsModel.getColumn().indexOf(toColumn);
-
-					console.log(index, cindex);
 
 					fromColumn.moveTo(index);
 					self.colElements.get(fromColumn).removeClass('c-col-draggable');

@@ -1,6 +1,7 @@
 {
   "name": "grid",
   "version": "0.0.9",
+  "outDir": "./dist",
   "description": "grid.js",
   "main": "gulpfile.js",
   "scripts": {
