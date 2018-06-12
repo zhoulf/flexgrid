@@ -1,4 +1,4 @@
-var $ = require('../util/shim').$;
+var $ = require('jQuery');
 var Utils = require('../util/Utils');
 
 

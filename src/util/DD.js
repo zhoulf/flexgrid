@@ -1,5 +1,5 @@
 'use strict';
-const $ = require('../util/shim').$;
+const $ = require('jQuery');
 
 const FLEXMINWIDTH = 35;
 

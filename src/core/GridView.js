@@ -7,6 +7,7 @@ var Header = require('./Header');
 var LockColManager = require('./LockColManager');
 var Scroller = require('./Scroller');
 var Utils = require('../util/Utils');
+var $ = require('jQuery');
 
 function createLayout(container, width) {
 	var wrapper = $('<div/>').addClass('c-grid-wrapper').width(width);

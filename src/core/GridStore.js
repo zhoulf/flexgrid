@@ -1,6 +1,6 @@
 var EventEmitter = require('../util/EventEmitter');
 var Utils = require('../util/Utils');
-var _ = require('../util/shim')._;
+var _ = require('lodash');
 
 class Row {
 	constructor(rid, data) {

@@ -1,6 +1,6 @@
 var Selection = require('./Selection');
 var Menu = require('../plugin/Menu');
-var $  = require('../util/shim').$;
+var $  = require('jQuery');
 
 const defHeaderContextMenu = [{ 
 		text: '冻结', 
@@ -96,10 +96,14 @@ const defSelectionContextMenu = [{
 		text: '打印', 
 		handler(info, context, evt) { 
 			console.log(evt, data, context);
+			window.print();
 		} 
 	},{ 
 		text: '导出', 
-		handler(info, context, evt) { console.log(context._selection); } 
+		handler(info, context, evt) { 
+			
+			console.log(context._selection); 
+		} 
 	},{ 
 		text: '标记', 
 		handler(info, context, evt) { console.log(context._selection); } 

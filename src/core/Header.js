@@ -1,4 +1,5 @@
-const { $, _ } = require('../util/shim');
+const $ = require('jQuery');
+const _ = require('lodash');
 const DD = require('../util/DD');
 
 const SORT_CLS_ASC = 'c-column-asc';

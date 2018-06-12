@@ -1,6 +1,6 @@
 var EventEmitter = require('../util/EventEmitter');
 var Utils = require('../util/Utils');
-var _ = require('../util/shim')._;
+var _ = require('lodash');
 
 var defRenderer = v => v;
 var ORDER = ['ASC', 'DESC'];

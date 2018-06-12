@@ -1,3 +1,3 @@
-var context = typeof window === 'undefined' ? this : window;
-exports.$ = context.$;
-exports._ = context._;
+// var context = typeof window === 'undefined' ? this : window;
+// exports.$ = context.$;
+// exports._ = context._;
