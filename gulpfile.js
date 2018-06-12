@@ -16,6 +16,7 @@ var connect = require('gulp-connect');
 var mocha = require('gulp-mocha');
 var exec = require('child_process').exec;
 var browserSync = require('browser-sync');
+var shim = require('browserify-shim');
 const pkg = require('./package.json');
 
 var outDir = pkg.outDir + '/' + pkg.version;
@@ -41,6 +42,7 @@ gulp
 			standalone: 'sz.grid',
 			debug: true
 		})
+		.transform('browserify-shim')
 		.bundle()
 		.pipe(source('grid.es6.js'))
 		.pipe(gulp.dest('./dist'))
@@ -55,6 +57,10 @@ gulp
 		gulp.watch('./less/**/*.less', ['less']);
 		gulp.watch('./src/**/*.js', ['compile']);
 		gulp.watch('./index.html').on('change', browserSync.reload);
+	})
+
+	.task('test', () => {
+		return gulp.src(['./test/**/*.test.js']).pipe(mocha());
 	});
 
 
