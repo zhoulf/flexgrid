@@ -26,17 +26,26 @@ const defHeaderContextMenu = [{
 		} 
 	}, { 
 		text: '定位', 
-		disabled: true,
+		disabled: false,
 		handler: function(info, context, evt) { 
-			// TODO
-			context.scrollToTop(Math.random() * 30000);
+			let value, index;
+
+			if (value = prompt('输入查找内容')) {
+				context.store.forEach(function(row, i) {
+					if (String(row[info.dataIndex]).indexOf(value) !== -1) {
+						index = i;
+					}
+				});
+
+				context.scrollToTop(index * 38);
+			}
 		} 
 	}, { 
 		text: '选中整列', 
 		handler(info, context, evt) { 
 			// alert(self.store.size());
-			context._start = [info.column.dataIndex, 0];
-			context._end = [info.column.dataIndex, context.store.size() - 1];
+			context._start = [info.column.cid, 0];
+			context._end = [info.column.cid, context.store.size() - 1];
 
 			context.selectionRange(context._start, context._end);
 		} 
@@ -50,25 +59,41 @@ const defHeaderContextMenu = [{
 		cls: 'number-column',
 		text: '求和', 
 		handler(info, context, evt) {
-			alert(context.store.size());
+			alert(context.store.sum(info.dataIndex));
+		} 
+	}, { 
+		cls: 'number-column',
+		text: '平均', 
+		handler(info, context, evt) {
+			alert(context.store.avg(info.dataIndex));
 		} 
 	}, { 
 		cls: 'number-column',
 		text: '最大值', 
 		handler(info, context, evt) {
-			alert(context.store.size());
+			var ret = context.store.max(info.dataIndex);
+			alert(ret.data[info.dataIndex]);
 		} 
 	}, { 
 		cls: 'number-column',
 		text: '最小值', 
 		handler(info, context, evt) {
-			alert(context.store.size());
+			var ret = context.store.min(info.dataIndex);
+			alert(ret.data[info.dataIndex]);
 		} 
 	}, { 
 		cls: 'number-column',
 		text: '方差', 
+		disabled: true,
 		handler(info, context, evt) {
-			alert(context.store.size());
+			// alert(context.store.size());
+		} 
+	}, { 
+		cls: 'number-column',
+		text: '标准差', 
+		disabled: true,
+		handler(info, context, evt) {
+			// alert(context.store.size());
 		} 
 	}];
 

@@ -131,6 +131,22 @@ class GridStore extends EventEmitter {
 		return this.rowModel.size;
 	}
 
+	sum(dataIndex) {
+		return _.sumBy(this.rows, row => +row.data[dataIndex]);
+	}
+
+	avg(dataIndex) {
+		return _.meanBy(this.rows, row => +row.data[dataIndex]);
+	}
+
+	max(dataIndex) {
+		return _.maxBy(this.rows, row => +row.data[dataIndex]);
+	}
+
+	min(dataIndex) {
+		return _.minBy(this.rows, row => +row.data[dataIndex]);
+	}
+
 	destory() { 
 
 	}

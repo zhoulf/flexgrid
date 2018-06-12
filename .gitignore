@@ -1,2 +1,4 @@
 node_modules
 dist
+dist/grid.es6.js
+dist/grid.min.css

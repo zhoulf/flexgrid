@@ -39,7 +39,7 @@ class Selection extends GridView {
 
 		let values = this._copyContent();
 
-		let ta = $('<textarea>').val(values).appendTo(this.$dom.header).focus();
+		let ta = $('<textarea>').val(values).appendTo(this.$dom.body).focus();
 		ta.get(0).setSelectionRange(0, values.length);
 		document.execCommand('copy', true);
 		ta.remove();

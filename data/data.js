@@ -10,7 +10,7 @@ var createData = function createData(total) {
 		result.push({
 			"MRYC": i++,
 			"CGYC": 0,
-			"JMMZ": Math.random().toFixed(3),
+			"JMMZ": +Math.random().toFixed(3),
 			"XGBG": 0,
 			"YYBMC": mapYYBMC[Math.floor(Math.random()*6)],
 			"YYBDQ": mapYYBDQ[Math.floor(Math.random()*8)],
@@ -19,13 +19,13 @@ var createData = function createData(total) {
 			"DYGLD": "1",
 			"CJGS": Math.ceil(Math.random()*1000000),
 			"QJMRSL": Math.ceil(Math.random()*1000000),
-			"MRJJ": (Math.random()*20000).toFixed(2),
-			"MCJJ": (Math.random()*100).toFixed(2),
+			"MRJJ": +(Math.random()*20000).toFixed(2),
+			"MCJJ": +(Math.random()*100).toFixed(2),
 			"MCGS": Math.ceil(Math.random() * 3000),
-			"MCJE": (Math.random()*100000).toFixed(3),
-			"JMMGS": (Math.random()*100000000).toFixed(3),
+			"MCJE": +(Math.random()*100000).toFixed(3),
+			"JMMGS": +(Math.random()*100000000).toFixed(3),
 			"JMMJE": Math.ceil(Math.random()*200000),
-			"CJBL": Math.random().toFixed(2)
+			"CJBL": +Math.random().toFixed(2)
 		});
 	}
 	return result;
