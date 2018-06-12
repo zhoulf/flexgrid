@@ -185,12 +185,14 @@ class Contextmenu extends Selection {
 	_cellContextMenu(defCtxMenu, evt) {
 		let $cell = $(evt.target);
 		let dataIndex = $cell.data('dataIndex');
+		let columnId = $cell.data('cid');
 		let rownumber = +$cell.parent('.c-grid-row').attr('rid');
 		let menu = this.$contextmenu;
 
 		let info = { 
 			'value': $cell.text(),
 			'dataIndex': dataIndex, 
+			'columnId': columnId,
 			'rownumber': rownumber,
 			'rowIndex': rownumber,
 			'context': menu

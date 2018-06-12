@@ -8,7 +8,7 @@ var defineDell = function(colM) {
 		.addClass(() => colM.hidden ? 'c-column-hide' : '')
 		.addClass(() => colM.locked ? 'c-column-locked' : '')
 		.attr('tabindex', -1)
-		.data('dataIndex', colM.dataIndex)
+		.data({ 'dataIndex': colM.dataIndex, 'cid': colM.cid })
 		.width(colM.width);
 
 	return cell;

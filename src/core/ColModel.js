@@ -224,7 +224,7 @@ class ColModel extends EventEmitter {
 	}
 
 	getColumnsById(id) {
-		return this.colModel[id] || null;
+		return this.colModel.get(id) || null;
 	}
 
 	each(callback, context) {
