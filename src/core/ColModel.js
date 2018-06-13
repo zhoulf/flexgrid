@@ -37,6 +37,13 @@ class Column extends EventEmitter {
 		Object.assign(this, defaults, options);
 	}
 
+	setText(text) {
+		if (typeof text != 'string') return;
+
+		this.text = text;
+		this.fire('column-texted', this.text, this);
+	}
+
 	setWidth(num) {
 		if (!this.resizable) return;
 		if (isNaN(num)) return;
@@ -102,7 +109,8 @@ class Column extends EventEmitter {
  	moveTo(index) {
  		if (isNaN(+index)) return;
 
- 		this.context.fire('column-move-to', this, +index);
+ 		// this.context.fire('column-move-to', this, +index);
+ 		this.context.move(this, +index);
  	}
 
  	remove() {
@@ -171,28 +179,32 @@ class ColModel extends EventEmitter {
 			this.fire('columns-sort-changed');
 		}, 20));
 
-		this.on('column-move-to', (colM, toIndex) => {
-			let current = this.columns.indexOf(colM);
-
-			if (toIndex === current) return;
-
-			if (toIndex > current) {
-				this.columns.splice(toIndex + 1, 0, this.columns[current]);
-				this.columns.splice(current, 1);
-			} else {
-				this.columns.splice(toIndex, 0, this.columns[current]);
-				this.columns.splice(++current, 1);
-			}
-
-			this.fire('column-moved', colM, current, toIndex);
-		});
-
 		this.on('column-removed', colM => {
 			this.columns = this.columns.filter(col => col.dataIndex != colM.dataIndex);
 			this.colModel.delete(colM.cid);
 			this.colHeaders.delete(colM.dataIndex);
 		});
 
+	}
+
+	move(colM, toIndex) {
+		let current = this.columns.indexOf(colM);
+
+		// TODO
+		// 如果移到冻结列位置，需冻结
+
+		if (toIndex === current) return;
+
+		if (toIndex > current) {
+			// 暂时元素都是用$().after移动，所以位置toIndex + 1
+			this.columns.splice(toIndex + 1, 0, this.columns[current]);
+			this.columns.splice(current, 1);
+		} else {
+			this.columns.splice(toIndex + 1, 0, this.columns[current]);
+			this.columns.splice(++current, 1);
+		}
+
+		this.fire('column-moved', colM, current, toIndex);
 	}
 
 	size() { 

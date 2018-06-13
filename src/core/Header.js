@@ -79,6 +79,8 @@ class Header {
 
 		this.colsModel.each(colM => {
 
+			colM.on('column-texted', text => this.colElements.get(colM).text(text));
+
 			colM.on('column-resized', width => this.colElements.get(colM).outerWidth(width));
 
 			colM.on('column-hidden', isHidden => {
@@ -209,8 +211,6 @@ class Header {
 					let $overColumn = $(this);
 					toColumn = $overColumn.data('column');
 
-					console.log($overColumn.index());
-					
 					let top = $overColumn.offset().top - 12;
 					let left = $overColumn.offset().left + toColumn.width - 8;
 					
@@ -227,11 +227,12 @@ class Header {
 				self._dragging = false;
 
 				if (toColumn) {
-					let index = self.colElements.get(toColumn).index();
+					let toIndex = self.colElements.get(toColumn).index();
+					let formIndex = self.colsModel.getColumn().indexOf(fromColumn);
 
-					let cindex = self.colsModel.getColumn().indexOf(toColumn);
+					// console.log(toIndex, formIndex);
 
-					fromColumn.moveTo(index);
+					fromColumn.moveTo(toIndex);
 					self.colElements.get(fromColumn).removeClass('c-col-draggable');
 
 					$moveStatusTop.hide().remove();
