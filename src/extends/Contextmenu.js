@@ -134,6 +134,7 @@ const defSelectionContextMenu = [{
 		} 
 	},{ 
 		text: '标记', 
+		disabled: true,
 		handler(info, context, evt) { console.log(context._selection); } 
 	}];
 
