@@ -1,6 +1,7 @@
 var Selection = require('./Selection');
 var Menu = require('../plugin/Menu');
 var $  = require('jQuery');
+var JSonToCSV = require('../util/expoter/CSV');
 
 const defHeaderContextMenu = [{ 
 		text: '冻结', 
@@ -126,8 +127,10 @@ const defSelectionContextMenu = [{
 	},{ 
 		text: '导出', 
 		handler(info, context, evt) { 
-			
+			let data = context.store.slice(0, 50);
 			console.log(context._selection); 
+
+			toCSV(data, context.columnModel);
 		} 
 	},{ 
 		text: '标记', 
@@ -255,6 +258,27 @@ function docEvent($contextmenu) {
 function onMouseDown($contextmenu){
     $contextmenu.hide();
     $(document).off('mouseup.contextmenu');
+}
+
+function toCSV(data, colModel) {
+	// 测试
+	JSonToCSV.setDataConver({
+	  data: data.map(d => d.data),
+	  fileName: 'test',
+	  columns: {
+	    title: colModel.getColumn().map(colM => colM.text),
+	    key: colModel.getColumn().map(colM => colM.dataIndex)
+	    // formatter: function(n, v) {
+	    //   if(n === 'amont' && !isNaN(Number(v))) {
+	    //     v = v + '';
+	    //     v = v.split('.');
+	    //     v[0] = v[0].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
+	    //      return v.join('.');
+	    //   }
+	    //   if(n === 'proportion') return v + '%';
+	    // }
+	  }
+	});
 }
 
 module.exports = Contextmenu;
