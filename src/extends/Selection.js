@@ -20,7 +20,6 @@ class Selection extends GridView {
 
 		this._selection = [];
 		this._selectY = [];
-		// this._selectDataIndex = [];
 		this._selectColumns = [];
 	}
 
@@ -53,7 +52,6 @@ class Selection extends GridView {
 
 	_copyContent() {
 		let cols = this._selectColumns.map(cid => {
-			// let col = this.columnModel.getColumnByDataIndex(dataIndex);
 			let col = this.columnModel.getColumnsById(cid)
 
 			if (!col) { throw `not find columnId: ${cid} in columns` };
@@ -126,7 +124,6 @@ class Selection extends GridView {
 			
 			let i = row.rid;
 			let [y0, y1] = this._selectY;
-			// let cols = this._selectDataIndex;
 			let cols = this._selectColumns;
 
 			if (i >= y0 && i < y1 + 1) {
@@ -169,13 +166,10 @@ class Selection extends GridView {
 		this._lastY = y1;
 		// console.log(yDir, removeYRange);
 
-		// let dataIndex = this.getLockAndVisiableColumnAsDataIndex();
 		let columnIds = this.getLockAndVisiableColumnAsCid();
-		// [x0, y0, x1, y1] = orderBy(x0, y0, x1, y1, dataIndex);
 		[x0, y0, x1, y1] = orderBy(x0, y0, x1, y1, columnIds);
 
 
-		// let cols = this._selectDataIndex = dataIndex.slice(dataIndex.indexOf(x0), dataIndex.indexOf(x1)+1);
 		let cols = this._selectColumns = columnIds.slice(columnIds.indexOf(x0), columnIds.indexOf(x1)+1);
 		// console.log(cols);
 
@@ -218,25 +212,6 @@ class Selection extends GridView {
 
 		});
 	}
-
-	/*
-	 * lock + visiable = columns
-	 * @param {Array} columns -[dataIndex...]
-	 */
-	// getLockAndVisiableColumnAsDataIndex() {
-	// 	let cols = [];
-
-	// 	this.lockColManager
-	// 		.visibleLockColumn
-	// 		.each(colM => cols.unshift(colM.dataIndex));
-
-	// 	let visiableCols = this.columnModel
-	// 		.getVisibleColumn()
-	// 		.map(colM => colM.dataIndex)
-	// 		.filter(dataIndex => cols.indexOf(dataIndex) == -1);
-
-	// 	return cols.concat(visiableCols);
-	// }
 
 	/*
 	 * lock + visiable = columns

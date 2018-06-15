@@ -1,5 +1,5 @@
-var EventEmitter = require('../util/EventEmitter');
 var $ = require('jQuery');
+var EventEmitter = require('../util/EventEmitter');
 
 var defineDell = function(colM) {
 	let cell = $('<li/>')
