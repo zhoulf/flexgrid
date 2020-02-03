@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<title>szgrid</title>
 	<link rel="stylesheet" href="./dist/grid.min.css">
+	<link rel="stylesheet" href="lib/scrollbar/scrollbar.css">
 	<style tyle="text/css">
 		html,
 		body {
@@ -24,6 +25,7 @@
 	
 	<script src="lib/jquery/1.10.2/jquery.min.js"></script>
 	<script src="lib/lodash/4.17.5/lodash.min.js"></script>
+	<script src="lib/scrollbar/scrollbar.js"></script>
 	<script src="data/data.js"></script>
 	<script src="dist/grid.es6.js"></script>
 
@@ -52,12 +54,15 @@
 		};
 
 		$(function() {
-			autoH();
+			// autoH();
 		});
 
 		$(window).on('resize', function() {
-			autoH();		
+			// autoH();		
 		});
+
+		var yScroll = ScrollBar.createYBar($('.c-grid-viewport'), $('.c-grid-body'));
+		var xScroll = ScrollBar.createXBar($('.c-grid-viewport'), $('.c-grid-body'));
 	</script>
 
 </body>
