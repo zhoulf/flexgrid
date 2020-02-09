@@ -31,7 +31,7 @@
 
 	<script>
 
-		var data = createData(919);
+		var data = createData(1900);
 
 		var g = new sz.grid({
 			'domEl': document.querySelector('.container'),
@@ -63,6 +63,16 @@
 
 		var yScroll = ScrollBar.createYBar($('.c-grid-viewport'), $('.c-grid-body'));
 		var xScroll = ScrollBar.createXBar($('.c-grid-viewport'), $('.c-grid-body'));
+
+		// resizer
+		var $resizer = $('<iframe class="resizer" frameborder="0"></iframe>');
+		$('.c-grid-body').append($resizer);
+		$resizer[0].contentWindow.onresize = function() {
+			console.log('resize');
+			xScroll.update();
+			yScroll.update();
+		};
+
 	</script>
 
 </body>
